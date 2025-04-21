@@ -21,11 +21,11 @@ async function sendVerificationEmail(
     const verificationLink = `${WEB_URL}/verify?token=${token}`;
 
     await transporter.sendMail({
-      from: 'The Gym Elite" <noreply@thegymelite.site>',
+      from: 'My Saas" <noreply@mysaas.site>',
       to: email,
       subject: 'Verify your email',
       html: `
-        <h2>Welcome the Gym Elite App</h2>
+        <h2>Welcome My Saas App</h2>
         <h2>Verify your email address</h2>
         <p>Click the link below to verify your account:</p>
         <a href="${verificationLink}">${verificationLink}</a>
@@ -39,11 +39,11 @@ async function sendVerificationEmail(
 async function welcomeEmail(email: string): Promise<void> {
   try {
     await transporter.sendMail({
-      from: 'The Gym Elite" <noreply@thegymelite.site>',
+      from: 'My Saas" <noreply@mysaas.site>',
       to: email,
-      subject: 'Welcome to the Gym Elite App',
+      subject: 'Welcome to My Saas App',
       html: `
-        <h2>Welcome the Gym Elite App</h2>
+        <h2>Welcome My Saas App</h2>
         <h2>Your account has been created</h2>
       `,
     });
@@ -59,7 +59,7 @@ async function sendResetPasswordEmail(
   const resetLink = `${WEB_URL}/reset-password?token=${token}`;
 
   await transporter.sendMail({
-    from: 'The Gym Elite" <noreply@thegymelite.site>',
+    from: 'My Saas" <noreply@mysaas.site>',
     to: email,
     subject: 'Reset your password',
     html: `
