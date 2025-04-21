@@ -3,6 +3,7 @@ import logger from '@src/logger';
 import { UserModel } from '@src/models/User';
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 
 const SECRET_KEY = 'your_secret_key';
 @Controller('auth')
@@ -11,8 +12,10 @@ export class AuthController {
   async login(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
-
-      const result = await UserModel.authenticate({ email, password });
+      const result = await UserModel.authenticate({
+        email,
+        password,
+      });
       return res.status(result.status).json(result.body);
     } catch (error) {
       logger.error('Error during login:', error);

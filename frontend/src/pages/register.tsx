@@ -3,6 +3,7 @@
 import { useState } from "react";
 import bcrypt from "bcryptjs";
 import { useRouter } from "next/navigation";
+import api from "@/services/api";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -25,12 +26,12 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (form.password !== form.passwordConfirm) {
-      setError("Passwords do not match.");
-      return;
-    }
-
     try {
+      if (form.password !== form.passwordConfirm) {
+        setError("Passwords do not match.");
+        return;
+      }
+
       const hashedPassword = await bcrypt.hash(form.password, 10);
 
       const payload = {
@@ -40,21 +41,24 @@ export default function RegisterPage() {
         password: hashedPassword,
       };
 
-      // Replace with your API endpoint
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const response = await api.post("/user/register", payload);
 
-      if (!res.ok) {
-        const data = await res.json();
+      if (response.status !== 204) {
+        const data = await response.data();
         throw new Error(data.message || "Failed to register");
+      } else {
+        alert(
+          "Registration successful. Please check your email to verify your account."
+        );
       }
 
       router.push("/login");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unexpected error occurred.");
+      }
     }
   };
 

@@ -1,8 +1,34 @@
 "use client";
 
+import api from "@/services/api";
 import Link from "next/link";
+import { useState } from "react";
+import bcrypt from "bcryptjs";
 
 export default function LoginPage() {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  async function submitForm(event: React.FormEvent) {
+    try {
+      event.preventDefault();
+
+      await api.post("/auth/login", {
+        email,
+        password,
+      });
+      // Handle successful login (e.g., redirect to dashboard)
+      alert("Login successful");
+    } catch (error) {
+      if (error instanceof Error) {
+        alert("Login failed");
+      } else {
+        alert("An unknown error occurred");
+      }
+      console.error("Error during form submission:", error);
+    }
+  }
+
   return (
     <div className="hold-transition login-page" style={{ minHeight: "100vh" }}>
       <div className="login-box">
@@ -23,6 +49,8 @@ export default function LoginPage() {
                   className="form-control"
                   placeholder="Email"
                   required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 <div className="input-group-append">
                   <div className="input-group-text">
@@ -37,6 +65,8 @@ export default function LoginPage() {
                   className="form-control"
                   placeholder="Password"
                   required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <div className="input-group-append">
                   <div className="input-group-text">
@@ -54,7 +84,11 @@ export default function LoginPage() {
                 </div>
 
                 <div className="col-4">
-                  <button type="submit" className="btn btn-primary btn-block">
+                  <button
+                    type="submit"
+                    className="btn btn-primary btn-block"
+                    onClick={(event) => submitForm(event)}
+                  >
                     Sign In
                   </button>
                 </div>

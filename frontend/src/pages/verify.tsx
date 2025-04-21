@@ -23,7 +23,7 @@ export default function Verify() {
           console.error("Erro ao verificar o token:", error);
           alert("Erro ao verificar o token");
         } finally {
-          window.location.href = "/";
+          window.location.href = "/login";
         }
       }
     }
@@ -31,7 +31,7 @@ export default function Verify() {
   }, []);
   return (
     <div>
-      <h1>Verify user</h1>
+      <h1>User Verified</h1>
     </div>
   );
 }

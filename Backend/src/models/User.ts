@@ -22,14 +22,12 @@ export class UserModel {
         return { status: 409, body: { message: 'Email already in use.' } };
       }
 
-      const hashedPassword = await bcrypt.hash(password, 10);
-
       const newUser = {
         id: ulid(),
         firstName,
         lastName,
         email,
-        password: hashedPassword,
+        password,
         verified: false,
         ...optional,
       };
@@ -134,8 +132,8 @@ export class UserModel {
 
       if (!email || !password) {
         return {
-          status: 400,
-          body: { message: 'Email and password are required.' },
+          status: 401,
+          body: { message: 'Login and/or Password incorrect' },
         };
       }
 
