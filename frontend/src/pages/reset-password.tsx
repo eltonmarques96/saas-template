@@ -27,7 +27,7 @@ export default function ResetPasswordPage() {
 
     try {
       const payload = {
-        password,
+        newPassword: password,
         token,
       };
       const response = await api.post("/user/reset-password", payload);

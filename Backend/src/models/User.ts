@@ -4,6 +4,7 @@ import { UserRepository } from '../repositories/UserRepository';
 import { generateToken, verifyToken } from '../services/TokenService';
 import { MailService } from '../services/MailService';
 import logger from '@src/logger';
+import jwt from 'jsonwebtoken';
 
 export class UserModel {
   static async register(data: any) {
@@ -92,15 +93,12 @@ export class UserModel {
   static async resetPassword(data: { token: string; newPassword: string }) {
     try {
       const { token, newPassword } = data;
-      let payload;
-      try {
-        payload = verifyToken(token);
-      } catch (error) {
-        return {
-          status: 403,
-          body: { message: 'Invalid or expired token.' },
-        };
+
+      const payload = verifyToken(token);
+      if (payload === null) {
+        return { status: 403, body: { message: 'Invalid or expired token.' } };
       }
+
       const user = await UserRepository.findByEmail(payload.email);
 
       if (!user) {
@@ -112,7 +110,10 @@ export class UserModel {
 
       return { status: 200, body: { message: 'Password successfully reset.' } };
     } catch (error) {
-      logger.error('Error during password reset:', error);
+      if (error instanceof jwt.JsonWebTokenError) {
+        return { status: 403, body: { message: 'Invalid or expired token.' } };
+      }
+      console.error('Error during password reset:', error);
       return {
         status: 500,
         body: { message: 'Internal server error' },
