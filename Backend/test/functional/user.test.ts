@@ -79,6 +79,7 @@ describe('User Controller Test', () => {
       'Password reset email sent successfully.'
     );
   });
+
   it('should not send forgot password email for non-existent user', async () => {
     const forgotPasswordData = {
       email: 'nonexistent@example.com',
@@ -163,5 +164,18 @@ describe('User Controller Test', () => {
       'message',
       'Password must be at least 8 characters long.'
     );
+  });
+
+  it('should not verify a user that does not exist', async () => {
+    const token = jwt.sign(
+      { email: 'nonexistent@example.com' },
+      process.env.JWT_SECRET || 'testSecret',
+      { expiresIn: '1h', algorithm: 'HS256' }
+    );
+    const { status, body } = await global.testRequest.get(
+      `/user/verify?token=${token}`
+    );
+    expect(status).toBe(404);
+    expect(body).toHaveProperty('message', 'User not found.');
   });
 });

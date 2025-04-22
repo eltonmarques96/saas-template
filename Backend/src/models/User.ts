@@ -191,7 +191,17 @@ export class UserModel {
 
       return {
         status: 200,
-        body: { message: 'Authentication successful.', token },
+        body: {
+          message: 'Authentication successful.',
+          token,
+          user: {
+            id: user?.id,
+            firstName: user?.firstName,
+            lastName: user?.lastName,
+            email: user?.email,
+            profilePhoto: user?.profilePhoto,
+          },
+        },
       };
     } catch (error) {
       logger.error('Error during user authentication:', error);

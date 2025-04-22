@@ -3,7 +3,6 @@ import logger from '@src/logger';
 import { UserModel } from '@src/models/User';
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
 
 const SECRET_KEY = 'your_secret_key';
 @Controller('auth')
