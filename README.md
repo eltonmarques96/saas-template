@@ -6,6 +6,8 @@ Template with basic CRUD template using NodeJS with OvernightJS (backend), React
 - Login
 - Validate User
 - Forgot Password
+- Middleware to private route
+- Initial Page of Dashboard
 
 ## Tools
 ### Backend
