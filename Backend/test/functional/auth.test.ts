@@ -138,4 +138,40 @@ describe('Auth Controller Test', () => {
     expect(response.status).toBe(200);
     expect(response.body.user).not.toHaveProperty('password');
   });
+
+  it('should get user profile', async () => {
+    const password = 'hashedPassword';
+    const mockUser = {
+      email: 'test@example.com',
+      password: '',
+      firstName: 'John',
+      lastName: 'Lennon',
+      id: '123',
+      verified: true,
+    };
+    mockUser.password = await bcrypt.hash(password, 10);
+    await UserRepository.create(mockUser);
+
+    const loginResponse = await global.testRequest
+      .post('/auth/login')
+      .send({ email: mockUser.email, password: password });
+
+    const token = loginResponse.body.token;
+
+    const profileResponse = await global.testRequest
+      .get('/auth/profile')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(profileResponse.status).toBe(200);
+    expect(profileResponse.body.user).toHaveProperty(
+      'firstName',
+      mockUser.firstName
+    );
+    expect(profileResponse.body.user).toHaveProperty(
+      'lastName',
+      mockUser.lastName
+    );
+    expect(profileResponse.body.user).toHaveProperty('email', mockUser.email);
+    expect(profileResponse.body.user).not.toHaveProperty('password');
+  });
 });

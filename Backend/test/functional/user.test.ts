@@ -11,12 +11,6 @@ describe('User Controller Test', () => {
     sendMailMock.mockClear();
   });
 
-  it('should return user info', async () => {
-    const { status, body } = await global.testRequest.get('/user');
-    expect(status).toBe(200);
-    expect(body).toEqual({});
-  });
-
   it('should register a user', async () => {
     const userData = {
       firstName: 'Jane',
@@ -32,16 +26,6 @@ describe('User Controller Test', () => {
     expect(body.message).toBe(
       'User successfully created. Please verify your email.'
     );
-  });
-
-  it('should get user profile', async () => {
-    const email = 'jane.doe@example.com';
-    const { status, body } = await global.testRequest.get(
-      `/user/profile?email=${email}`
-    );
-    expect(status).toBe(200);
-    expect(body).toHaveProperty('firstName');
-    expect(body.verified).toBe(false);
   });
 
   it('should verify a user', async () => {

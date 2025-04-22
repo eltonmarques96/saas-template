@@ -1,23 +1,20 @@
 "use client";
 
+import AuthContext from "@/contexts/AuthContext";
 import api from "@/services/api";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const { signIn } = useContext(AuthContext);
 
   async function submitForm(event: React.FormEvent) {
     try {
       event.preventDefault();
 
-      await api.post("/auth/login", {
-        email,
-        password,
-      });
-      // Handle successful login (e.g., redirect to dashboard)
-      alert("Login successful");
+      await signIn(email, password);
     } catch (error) {
       if (error instanceof Error) {
         if ((error as import("axios").AxiosError).response?.status === 403) {

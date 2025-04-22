@@ -5,11 +5,6 @@ import logger from '@src/logger';
 
 @Controller('user')
 export class UserController {
-  @Get('')
-  public getuserInfo(_: Request, res: Response): void {
-    res.status(200).send({});
-  }
-
   @Post('register')
   async register(req: Request, res: Response) {
     try {
@@ -17,17 +12,6 @@ export class UserController {
       return res.status(result.status).json(result.body);
     } catch (error) {
       logger.error('Error during registration:', error);
-      return res.status(500).json({ message: 'Internal server error.' });
-    }
-  }
-
-  @Get('profile')
-  async getProfile(req: Request, res: Response) {
-    try {
-      const email = req.query.email as string;
-      const result = await UserModel.getProfile(email);
-      return res.status(result.status).json(result.body);
-    } catch (error) {
       return res.status(500).json({ message: 'Internal server error.' });
     }
   }

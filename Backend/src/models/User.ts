@@ -60,18 +60,44 @@ export class UserModel {
     }
   }
 
-  static async getProfile(email: string) {
-    if (!email) {
-      return { status: 400, body: { message: 'Email is required.' } };
-    }
+  static async getProfile(token: string) {
+    try {
+      const payload = verifyToken(token);
+      if (!payload) {
+        return {
+          status: 401,
+          body: { message: 'Invalid or expired token.' },
+        };
+      }
 
-    const user = await UserRepository.findByEmail(email);
-    if (!user) {
-      return { status: 404, body: { message: 'User not found.' } };
-    }
+      const user = await UserRepository.findByEmail(payload.email);
+      if (!user) {
+        return {
+          status: 404,
+          body: { message: 'User not found.' },
+        };
+      }
 
-    const { password, ...userData } = user;
-    return { status: 200, body: userData };
+      return {
+        status: 200,
+        body: {
+          user: {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            profilePhoto: user.profilePhoto,
+          },
+          token,
+        },
+      };
+    } catch (error) {
+      logger.error('Error fetching user profile:', error);
+      return {
+        status: 500,
+        body: { message: 'Internal server error' },
+      };
+    }
   }
 
   static async verifyUser(token: string) {
