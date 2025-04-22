@@ -74,20 +74,60 @@ describe('User Controller Test', () => {
       .post('/user/forgot-password')
       .send(forgotPasswordData);
     expect(status).toBe(200);
-    expect(body).toHaveProperty('message');
+    expect(body).toHaveProperty(
+      'message',
+      'Password reset email sent successfully.'
+    );
+  });
+  it('should not send forgot password email for non-existent user', async () => {
+    const forgotPasswordData = {
+      email: 'nonexistent@example.com',
+    };
+    const { status, body } = await global.testRequest
+      .post('/user/forgot-password')
+      .send(forgotPasswordData);
+    expect(status).toBe(404);
+    expect(body).toHaveProperty('message', 'User not found.');
   });
 
-  it('should reset password', async () => {
-    const userEmail = 'hello@gmail.com';
-    const fakeToken = generateToken({ userEmail }, 60);
+  it('should reset password successfully with valid token', async () => {
+    const userEmail = 'jane.doe@example.com';
+    const validToken = generateToken({ userEmail }, 3600); // Token valid for 1 hour
     const resetPasswordData = {
-      token: fakeToken,
-      newPassword: 'newPassword123',
+      token: validToken,
+      newPassword: 'newSecurePassword123',
     };
     const { status, body } = await global.testRequest
       .post('/user/reset-password')
       .send(resetPasswordData);
     expect(status).toBe(200);
-    expect(body).toHaveProperty('message');
+    expect(body).toHaveProperty('message', 'Password successfully reset.');
+  });
+
+  it('should not reset password if token is expired', async () => {
+    const userEmail = 'hello@gmail.com';
+    // Generate a token that expires immediately
+    const expiredToken = generateToken({ userEmail }, -1);
+    const resetPasswordData = {
+      token: expiredToken,
+      newPassword: 'newPassword123',
+    };
+    const { status, body } = await global.testRequest
+      .post('/user/reset-password')
+      .send(resetPasswordData);
+    expect(status).toBe(403);
+    expect(body).toHaveProperty('message', 'Invalid or expired token.');
+  });
+
+  it('should not reset password if token is invalid', async () => {
+    const resetPasswordData = {
+      token: 'invalidToken123',
+      newPassword: 'newPassword123',
+    };
+    const { status, body } = await global.testRequest
+      .post('/user/reset-password')
+      .send(resetPasswordData);
+    expect(status).toBe(403);
+    expect(body).toHaveProperty('message', 'Invalid or expired token.');
   });
 });

@@ -90,19 +90,34 @@ export class UserModel {
   }
 
   static async resetPassword(data: { token: string; newPassword: string }) {
-    const { token, newPassword } = data;
+    try {
+      const { token, newPassword } = data;
+      let payload;
+      try {
+        payload = verifyToken(token);
+      } catch (error) {
+        return {
+          status: 403,
+          body: { message: 'Invalid or expired token.' },
+        };
+      }
+      const user = await UserRepository.findByEmail(payload.email);
 
-    const payload = verifyToken(token);
-    const user = await UserRepository.findByEmail(payload.email);
+      if (!user) {
+        return { status: 404, body: { message: 'User not found.' } };
+      }
 
-    if (!user) {
-      return { status: 404, body: { message: 'User not found.' } };
+      user.password = await bcrypt.hash(newPassword, 10);
+      await UserRepository.save(user);
+
+      return { status: 200, body: { message: 'Password successfully reset.' } };
+    } catch (error) {
+      logger.error('Error during password reset:', error);
+      return {
+        status: 500,
+        body: { message: 'Internal server error' },
+      };
     }
-
-    user.password = await bcrypt.hash(newPassword, 10);
-    await UserRepository.save(user);
-
-    return { status: 200, body: { message: 'Password successfully reset.' } };
   }
 
   static async forgotPassword(data: { email: string }) {

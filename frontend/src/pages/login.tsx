@@ -3,7 +3,6 @@
 import api from "@/services/api";
 import Link from "next/link";
 import { useState } from "react";
-import bcrypt from "bcryptjs";
 
 export default function LoginPage() {
   const [email, setEmail] = useState<string>("");
@@ -21,11 +20,14 @@ export default function LoginPage() {
       alert("Login successful");
     } catch (error) {
       if (error instanceof Error) {
-        alert("Login failed");
+        if ((error as import("axios").AxiosError).response?.status === 403) {
+          alert("Your account is not verified");
+        } else {
+          alert("Login failed");
+        }
       } else {
         alert("An unknown error occurred");
       }
-      console.error("Error during form submission:", error);
     }
   }
 
@@ -33,9 +35,9 @@ export default function LoginPage() {
     <div className="hold-transition login-page" style={{ minHeight: "100vh" }}>
       <div className="login-box">
         <div className="login-logo">
-          <a href="#">
+          <Link href="/login">
             <b>My</b> SAAS
-          </a>
+          </Link>
         </div>
 
         <div className="card">

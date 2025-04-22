@@ -43,7 +43,7 @@ export default function RegisterPage() {
 
       const response = await api.post("/user/register", payload);
 
-      if (response.status !== 204) {
+      if (response.status !== 201) {
         const data = await response.data();
         throw new Error(data.message || "Failed to register");
       } else {

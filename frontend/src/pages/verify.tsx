@@ -1,3 +1,5 @@
+"use client";
+
 import api from "@/services/api";
 import { useEffect } from "react";
 
@@ -13,24 +15,21 @@ export default function Verify() {
       if (token) {
         try {
           const response = await api.get("/user/verify" + `?token=${token}`);
-          console.log(response.status);
           if (response.status === 200) {
             alert("Token verificado com sucesso");
           } else {
             alert("Falha na verificação do token");
           }
-        } catch (error) {
-          console.error("Erro ao verificar o token:", error);
-          alert("Erro ao verificar o token");
-        } finally {
           window.location.href = "/login";
+        } catch {
+          alert("Erro ao verificar o token");
         }
       }
     }
     verifyToken();
   }, []);
   return (
-    <div>
+    <div className="hold-transition login-page" style={{ minHeight: "100vh" }}>
       <h1>User Verified</h1>
     </div>
   );

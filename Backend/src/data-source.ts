@@ -3,6 +3,7 @@ import { DataSource } from 'typeorm';
 import { User } from './database/entities/User';
 
 import { DataSourceOptions } from 'typeorm';
+import { Token } from './database/entities/Token';
 
 let configurations: DataSourceOptions;
 
@@ -13,8 +14,11 @@ if (process.env.NODE_ENV === 'test') {
     synchronize: true,
     dropSchema: true,
     logging: false,
-    entities: [User],
-    migrations: [],
+    entities: [User, Token],
+    migrations: [
+      './src/database/migrations/1744406196160-user.ts',
+      './src/database/migrations/1745281251943-token.ts',
+    ],
     subscribers: [],
   };
 } else if (process.env.NODE_ENV === 'production') {
@@ -27,8 +31,11 @@ if (process.env.NODE_ENV === 'test') {
     database: process.env.DB_HOST,
     synchronize: false,
     logging: false,
-    entities: [User],
-    migrations: ['./src/database/migrations/1744406196160-user.ts'],
+    entities: [User, Token],
+    migrations: [
+      './src/database/migrations/1744406196160-user.ts',
+      './src/database/migrations/1745281251943-token.ts',
+    ],
     subscribers: [],
   };
 } else {
@@ -38,8 +45,11 @@ if (process.env.NODE_ENV === 'test') {
     synchronize: false,
     dropSchema: false,
     logging: false,
-    entities: [User],
-    migrations: ['./src/database/migrations/1744406196160-user.ts'],
+    entities: [User, Token],
+    migrations: [
+      './src/database/migrations/1744406196160-user.ts',
+      './src/database/migrations/1745281251943-token.ts',
+    ],
     subscribers: [],
   };
 }
