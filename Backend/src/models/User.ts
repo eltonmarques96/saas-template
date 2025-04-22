@@ -18,6 +18,13 @@ export class UserModel {
         };
       }
 
+      if (password.length < 8) {
+        return {
+          status: 400,
+          body: { message: 'Password must be at least 8 characters long.' },
+        };
+      }
+
       const existingUser = await UserRepository.findByEmail(email);
       if (existingUser) {
         return { status: 409, body: { message: 'Email already in use.' } };
@@ -93,6 +100,13 @@ export class UserModel {
   static async resetPassword(data: { token: string; newPassword: string }) {
     try {
       const { token, newPassword } = data;
+
+      if (newPassword.length < 8) {
+        return {
+          status: 400,
+          body: { message: 'Password must be at least 8 characters long.' },
+        };
+      }
 
       const payload = verifyToken(token);
       if (payload === null) {

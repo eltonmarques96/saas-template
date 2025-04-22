@@ -130,4 +130,38 @@ describe('User Controller Test', () => {
     expect(status).toBe(403);
     expect(body).toHaveProperty('message', 'Invalid or expired token.');
   });
+
+  it('should not allow registration with a password less than 8 characters', async () => {
+    const userData = {
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+      password: 'short',
+    };
+    const { status, body } = await global.testRequest
+      .post('/user/register')
+      .send(userData);
+    expect(status).toBe(400);
+    expect(body).toHaveProperty(
+      'message',
+      'Password must be at least 8 characters long.'
+    );
+  });
+
+  it('should not reset password if the new password is less than 8 characters', async () => {
+    const userEmail = 'jane.doe@example.com';
+    const validToken = generateToken({ userEmail }, 3600); // Token valid for 1 hour
+    const resetPasswordData = {
+      token: validToken,
+      newPassword: 'short',
+    };
+    const { status, body } = await global.testRequest
+      .post('/user/reset-password')
+      .send(resetPasswordData);
+    expect(status).toBe(400);
+    expect(body).toHaveProperty(
+      'message',
+      'Password must be at least 8 characters long.'
+    );
+  });
 });

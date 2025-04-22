@@ -10,6 +10,8 @@ export default function ResetPasswordPage() {
   const token = searchParams?.get("token");
 
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -30,6 +32,12 @@ export default function ResetPasswordPage() {
         newPassword: password,
         token,
       };
+
+      if (password.length < 8) {
+        setError("Password must be at least 8 characters long.");
+        return;
+      }
+
       const response = await api.post("/user/reset-password", payload);
       if (response.status !== 200) {
         const data = await response.data();
@@ -61,6 +69,7 @@ export default function ResetPasswordPage() {
         <div className="card">
           <div className="card-body login-card-body">
             <p className="login-box-msg">Enter your new password</p>
+            {error && <div className="alert alert-danger">{error}</div>}
 
             {/* Reset Password Form */}
             <form onSubmit={handleSubmit}>

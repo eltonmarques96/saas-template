@@ -32,6 +32,11 @@ export default function RegisterPage() {
         return;
       }
 
+      if (form.password.length < 8) {
+        setError("Password must be at least 8 characters long.");
+        return;
+      }
+
       const hashedPassword = await bcrypt.hash(form.password, 10);
 
       const payload = {
