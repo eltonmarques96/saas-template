@@ -1,9 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import bcrypt from "bcryptjs";
 import { useRouter } from "next/navigation";
 import api from "@/services/api";
+import md5 from "md5";
+import Link from "next/link";
+import { AppRootLayout } from "@/components/app-root-layout";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -15,6 +28,7 @@ export default function RegisterPage() {
     password: "",
     passwordConfirm: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const [error, setError] = useState<string | null>(null);
 
@@ -27,17 +41,18 @@ export default function RegisterPage() {
     e.preventDefault();
 
     try {
+      setLoading(true);
       if (form.password !== form.passwordConfirm) {
-        setError("Passwords do not match.");
+        setError("Senhas nao sao iguais");
         return;
       }
 
       if (form.password.length < 8) {
-        setError("Password must be at least 8 characters long.");
+        setError("A senha deve ter no minino 8 caracteres");
         return;
       }
 
-      const hashedPassword = await bcrypt.hash(form.password, 10);
+      const hashedPassword = md5(form.password);
 
       const payload = {
         firstName: form.firstName,
@@ -50,10 +65,10 @@ export default function RegisterPage() {
 
       if (response.status !== 201) {
         const data = await response.data();
-        throw new Error(data.message || "Failed to register");
+        throw new Error(data.message || "Falha ao criar conta");
       } else {
-        alert(
-          "Registration successful. Please check your email to verify your account."
+        toast(
+          "Sua conta criada. Por favor, olhe sua conta de email para verificar sua conta."
         );
       }
 
@@ -62,133 +77,104 @@ export default function RegisterPage() {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError("An unexpected error occurred.");
+        setError("Um erro inesperado aconteceu");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div
-      className="hold-transition register-page"
-      style={{ minHeight: "100vh" }}
-    >
-      <div className="register-box">
-        <div className="register-logo">
-          <a href="#">
-            <b>My</b> SAAS
-          </a>
-        </div>
-
-        <div className="card">
-          <div className="card-body register-card-body">
-            <p className="login-box-msg">Register a new account</p>
-
-            {error && <div className="alert alert-danger">{error}</div>}
-
-            <form onSubmit={handleSubmit}>
-              <div className="input-group mb-3">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="First Name"
-                  name="firstName"
-                  value={form.firstName}
-                  onChange={handleChange}
-                  required
-                />
-                <div className="input-group-append">
-                  <div className="input-group-text">
-                    <span className="fas fa-user"></span>
-                  </div>
+    <AppRootLayout>
+      <Card>
+        <CardHeader className="text-center">
+          <CardTitle className="text-xl">Seja bem vindo</CardTitle>
+          <CardDescription>Crie sua conta</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit}>
+            <div className="grid gap-6">
+              <div className="flex flex-col gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="email">Primeiro Nome</Label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    placeholder="Primeiro Nome"
+                    name="firstName"
+                    value={form.firstName}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
-              </div>
 
-              <div className="input-group mb-3">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Last Name"
-                  name="lastName"
-                  value={form.lastName}
-                  onChange={handleChange}
-                  required
-                />
-                <div className="input-group-append">
-                  <div className="input-group-text">
-                    <span className="fas fa-user"></span>
-                  </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="lastName">Sobrenome</Label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    placeholder="Sobrenome"
+                    name="lastName"
+                    value={form.lastName}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
-              </div>
 
-              <div className="input-group mb-3">
-                <input
-                  type="email"
-                  className="form-control"
-                  placeholder="Email"
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  required
-                />
-                <div className="input-group-append">
-                  <div className="input-group-text">
-                    <span className="fas fa-envelope"></span>
-                  </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="email">E-mail</Label>
+                  <Input
+                    type="email"
+                    className="form-control"
+                    placeholder="E-mail"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
-              </div>
 
-              <div className="input-group mb-3">
-                <input
-                  type="password"
-                  className="form-control"
-                  placeholder="Password"
-                  name="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  required
-                />
-                <div className="input-group-append">
-                  <div className="input-group-text">
-                    <span className="fas fa-lock"></span>
-                  </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="lastName">Senha</Label>
+                  <Input
+                    type="password"
+                    className="form-control"
+                    placeholder="Senha"
+                    name="password"
+                    value={form.password}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
-              </div>
 
-              <div className="input-group mb-3">
-                <input
-                  type="password"
-                  className="form-control"
-                  placeholder="Confirm Password"
-                  name="passwordConfirm"
-                  value={form.passwordConfirm}
-                  onChange={handleChange}
-                  required
-                />
-                <div className="input-group-append">
-                  <div className="input-group-text">
-                    <span className="fas fa-lock"></span>
-                  </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="lastName">Confirmação de Senha</Label>
+                  <Input
+                    type="password"
+                    className="form-control"
+                    placeholder="Confirmar Senha"
+                    name="passwordConfirm"
+                    value={form.passwordConfirm}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
-              </div>
 
-              <div className="row">
-                <div className="col-12">
-                  <button
-                    type="submit"
-                    className="btn btn-primary btn-block col-12"
-                  >
-                    Register
-                  </button>
-                </div>
+                <Button type="submit" className="w-full" disabled={loading}>
+                  Criar Conta
+                </Button>
               </div>
-            </form>
-
-            <a href="/login" className="text-center d-block mt-3">
-              I already have an account
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
+              {error ? <p>{error}</p> : <></>}
+              <div className="text-center text-sm">
+                Já possui uma conta?{" "}
+                <Link href="/login" className="underline underline-offset-4">
+                  Faça o login
+                </Link>
+              </div>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </AppRootLayout>
   );
 }

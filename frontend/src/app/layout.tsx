@@ -1,14 +1,9 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import "admin-lte/dist/css/adminlte.min.css";
-import "@fortawesome/fontawesome-free/css/all.min.css";
-
 import type { Metadata } from "next";
-
 import Script from "next/script";
 
 export const metadata: Metadata = {
-  title: "SAAS Template",
-  description: "AdminLTE UI in Next.js App Router",
+  title: "My Associate",
+  description: "Your AI Assistent",
 };
 
 export default function RootLayout({
@@ -18,13 +13,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>{/* Optional: Additional meta or favicon */}</head>
-      <body className="hold-transition sidebar-mini layout-fixed">
-        <p></p>
-        <div className="wrapper">{children}</div>
-        <Script src="/jquery.js" strategy="beforeInteractive" />
-        <Script src="/bootstrap.bundle.js" strategy="beforeInteractive" />
-        <Script src="/adminlte.js" strategy="afterInteractive" />
+      <head></head>
+      <body className="">
+        <Script
+          async
+          id="google-adsense"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-${process.env.NEXT_GOOGLE_ADSENSE}`}
+          crossOrigin="anonymous"
+        >
+          <div className="wrapper">{children}</div>
+        </Script>
       </body>
     </html>
   );

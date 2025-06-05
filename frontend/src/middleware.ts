@@ -1,9 +1,9 @@
 import { type MiddlewareConfig, NextRequest, NextResponse } from "next/server";
-import { parseCookies } from "nookies";
 
 const publicRoutes = [
   { path: "/login", whenAuthenticated: "redirect" },
   { path: "/register", whenAuthenticated: "redirect" },
+  { path: "/sentry-example-page", whenAuthenticated: "next" },
   { path: "/verify", whenAuthenticated: "next" },
   { path: "/reset-password", whenAuthenticated: "next" },
   { path: "/forgot-password", whenAuthenticated: "next" },
@@ -13,8 +13,11 @@ const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/login";
 
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  const publicRoute = publicRoutes.find((route) => route.path === path);
-  const token = request.cookies.get("nextsaas.token")?.value;
+  const cleanPath = path.split("?")[0].trim();
+  const publicRoute = publicRoutes.find((route) => {
+    return route.path.trim() === cleanPath;
+  });
+  const token = request.cookies.get("myassociate.token")?.value;
 
   if (!token && publicRoute) {
     return NextResponse.next();
@@ -26,7 +29,7 @@ export function middleware(request: NextRequest) {
   }
   if (token && publicRoute && publicRoute.whenAuthenticated === "redirect") {
     const redirectURL = request.nextUrl.clone();
-    redirectURL.pathname = "/login";
+    redirectURL.pathname = "/dashboard";
     return NextResponse.redirect(redirectURL);
   }
   if (token && !publicRoute) {
@@ -39,14 +42,14 @@ export function middleware(request: NextRequest) {
         const redirectURL = request.nextUrl.clone();
         redirectURL.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE;
         const response = NextResponse.redirect(redirectURL);
-        response.cookies.delete("nextsaas.token");
+        response.cookies.delete("myassociate.token");
         return response;
       }
-    } catch (error) {
+    } catch {
       const redirectURL = request.nextUrl.clone();
       redirectURL.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE;
       const response = NextResponse.redirect(redirectURL);
-      response.cookies.delete("nextsaas.token");
+      response.cookies.delete("myassociate.token");
       return response;
     }
   }

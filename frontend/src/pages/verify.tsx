@@ -1,7 +1,9 @@
 "use client";
 
+import { AppRootLayout } from "@/components/app-root-layout";
 import api from "@/services/api";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 export default function Verify() {
   function getTokenFromUrl() {
@@ -16,21 +18,27 @@ export default function Verify() {
         try {
           const response = await api.get("/user/verify" + `?token=${token}`);
           if (response.status === 200) {
-            alert("Token verificado com sucesso");
+            toast("Token verificado com sucesso");
           } else {
-            alert("Falha na verificação do token");
+            toast("Erro ao verifcar token", {
+              description: "Por favor, tente novamente.",
+            });
           }
           window.location.href = "/login";
         } catch {
-          alert("Erro ao verificar o token");
+          toast("Erro ao verifcar token", {
+            description: "Por favor, tente novamente.",
+          });
         }
       }
     }
     verifyToken();
   }, []);
   return (
-    <div className="hold-transition login-page" style={{ minHeight: "100vh" }}>
-      <h1>User Verified</h1>
-    </div>
+    <AppRootLayout>
+      <div style={{ minHeight: "100vh" }}>
+        <h1>Usuário Verificado</h1>
+      </div>
+    </AppRootLayout>
   );
 }
