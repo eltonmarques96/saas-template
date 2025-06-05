@@ -1,0 +1,18 @@
+echo 'Checking Lint for Frontend'
+npm run lint:frontend || (echo 'Lint on Frontend Failed' && exit 1)
+
+echo 'Checking Lint for Mobile'
+npm run lint:mobile || (echo 'Lint on Mobile Failed' && exit 1)
+
+echo 'Formarting code on Backend'
+npm run format:backend || (echo 'Lint on Backend Failed' && exit 1)
+echo 'Checking Lint for Backend'
+npm run lint:backend || (echo 'Lint on Backend Failed' && exit 1)
+echo 'Lint Finished'
+
+echo 'Running Backend Tests'
+echo 'Running Backend Unit Tests'
+npm run test || (echo 'Unit Tests on Backend Failed' && exit 1)
+echo 'Running Backend E2E Tests'
+npm run test || (echo 'E2E Tests on Backend Failed' && exit 1)
+echo 'Backend Tests Finished'
