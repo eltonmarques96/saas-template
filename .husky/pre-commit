@@ -14,6 +14,8 @@ echo 'Checking Lint for Backend'
 npm run lint:backend || (echo 'Lint on Backend Failed' && exit 1)
 echo 'Lint Finished'
 
+git add .
+
 echo 'Running Backend Tests'
 echo 'Running Backend Unit Tests'
 npm run test:backend || (echo 'Unit Tests on Backend Failed' && exit 1)
