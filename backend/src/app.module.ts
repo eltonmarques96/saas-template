@@ -1,12 +1,19 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { LoggerModule } from 'nestjs-pino';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { ConfigModule } from '@nestjs/config';
+import { getTypeOrmConfig } from './config/typeorm.config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRoot(getTypeOrmConfig()),
     ThrottlerModule.forRoot({
       throttlers: [
         {
@@ -27,4 +34,6 @@ import { LoggerModule } from 'nestjs-pino';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private dataSource: DataSource) {}
+}
