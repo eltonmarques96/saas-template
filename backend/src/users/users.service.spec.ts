@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { getTypeOrmConfig } from '../config/typeorm.config';
+import { getTypeOrmConfig } from '@config/typeorm.config';
 
 describe('UsersService', () => {
   let userService: UsersService;

@@ -1,5 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '@users/entities/user.entity';
 import { DataSource } from 'typeorm';
 
 export function getTypeOrmConfig(): TypeOrmModuleOptions {
@@ -29,6 +29,6 @@ export function getTypeOrmConfig(): TypeOrmModuleOptions {
   }
   return postgresConfiguration;
 }
-// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+
 export const AppDataSource = new DataSource(getTypeOrmConfig() as any);
 export default AppDataSource;

@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { getTypeOrmConfig } from 'src/config/typeorm.config';
+import { getTypeOrmConfig } from '@config/typeorm.config';
 
 describe('UsersController', () => {
   let controller: UsersController;

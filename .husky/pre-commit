@@ -17,6 +17,4 @@ echo 'Lint Finished'
 echo 'Running Backend Tests'
 echo 'Running Backend Unit Tests'
 npm run test:backend || (echo 'Unit Tests on Backend Failed' && exit 1)
-echo 'Running Backend E2E Tests'
-npm run test:backend || (echo 'E2E Tests on Backend Failed' && exit 1)
 echo 'Backend Tests Finished'
