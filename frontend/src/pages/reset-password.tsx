@@ -1,6 +1,20 @@
 import api from "@/services/api";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import md5 from "md5";
+import Link from "next/link";
+import { toast } from "sonner";
+import { AppRootLayout } from "@/components/app-root-layout";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
@@ -18,113 +32,92 @@ export default function ResetPasswordPage() {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match.");
+      setError("Senhas não sao iguais");
       return;
     }
 
     if (!token) {
-      alert("Invalid or missing token.");
+      setError("Token invalido");
       return;
     }
 
     try {
       const payload = {
-        newPassword: password,
+        newPassword: md5(password),
         token,
       };
 
       if (password.length < 8) {
-        setError("Password must be at least 8 characters long.");
+        setError("A senha deve ter no minino 8 caracteres");
         return;
       }
 
       const response = await api.post("/user/reset-password", payload);
       if (response.status !== 200) {
         const data = await response.data();
-        throw new Error(data.message || "Failed to reset password");
+        throw new Error(data.message || "Falha ao registrar conta");
       } else {
-        alert(
-          "Password reset successful. You can now log in with your new password."
-        );
+        toast("Senha alterada com sucesso");
       }
-
       router.push("/login");
-    } catch (err) {
-      console.error("Error resetting password:", err);
-      alert("There was an error resetting your password.");
+    } catch {
+      toast("Houve um erro ao alterar uma senha");
     }
   };
 
   return (
-    <div className="hold-transition login-page" style={{ minHeight: "100vh" }}>
-      <div className="login-box">
-        {/* Logo */}
-        <div className="login-logo">
-          <a href="/login">
-            <b>My</b> SAAS
-          </a>
-        </div>
-
-        {/* Card */}
-        <div className="card">
-          <div className="card-body login-card-body">
-            <p className="login-box-msg">Enter your new password</p>
-            {error && <div className="alert alert-danger">{error}</div>}
-
-            {/* Reset Password Form */}
+    <AppRootLayout>
+      <div className="flex flex-col gap-6">
+        <Card>
+          <CardHeader className="text-center">
+            <CardTitle className="text-xl">Reset de Senha</CardTitle>
+            <CardDescription>Insira a sua nova senha</CardDescription>
+          </CardHeader>
+          <CardContent>
             <form onSubmit={handleSubmit}>
-              <div className="input-group mb-3">
-                <input
-                  type="password"
-                  className="form-control"
-                  placeholder="New password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <div className="input-group-append">
-                  <div className="input-group-text">
-                    <span className="fas fa-lock"></span>
+              <div className="grid gap-6">
+                <div className="flex flex-col gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="password">Nova Senha</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      className="form-control"
+                      placeholder="Senha"
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
                   </div>
-                </div>
-              </div>
-
-              <div className="input-group mb-3">
-                <input
-                  type="password"
-                  className="form-control"
-                  placeholder="Confirm password"
-                  required
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-                <div className="input-group-append">
-                  <div className="input-group-text">
-                    <span className="fas fa-lock"></span>
+                  {error && error}
+                  <div className="grid gap-2">
+                    <Label htmlFor="password-confirmation">
+                      Confirmação de Senha
+                    </Label>
+                    <Input
+                      id="password-confirmation"
+                      type="password"
+                      className="form-control"
+                      placeholder="Confirme a senha"
+                      required
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
                   </div>
-                </div>
-              </div>
 
-              <div className="row">
-                <div className="col-12">
-                  <button
-                    type="submit"
-                    className="btn btn-primary btn-block col-12"
-                  >
-                    Reset Password
-                  </button>
+                  <Button type="submit" className="w-full">
+                    Resetar Senha
+                  </Button>
                 </div>
               </div>
             </form>
 
-            <div className="mt-3">
-              <p className="mb-0 text-center ">
-                <a href="/login">Back to login</a>
-              </p>
+            <div className="mt-4 text-center text-sm underline underline-offset-4">
+              <Link href="/login">Retornar ao login</Link>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
-    </div>
+    </AppRootLayout>
   );
 }
