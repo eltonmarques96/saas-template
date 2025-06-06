@@ -9,7 +9,8 @@
 		"lint:backend": "cd backend && yarn lint",
 		"lint:frontend": "cd frontend && yarn lint",
 		"lint:mobile": "cd mobile && yarn lint",
-		"test": "cd backend && yarn test",
+		"test:backend": "cd backend && yarn test",
+		"test:frontend": "cd frontend && yarn test",
 		"test:e2e": "cd backend && yarn test:e2e"
 	},
 	"devDependencies": {
