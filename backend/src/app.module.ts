@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -9,6 +8,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { getTypeOrmConfig } from './config/typeorm.config';
+import { UsersModule } from './users/users.module';
+import { BullModule } from '@nestjs/bullmq';
 
 @Module({
   imports: [
@@ -29,7 +30,14 @@ import { getTypeOrmConfig } from './config/typeorm.config';
         password: 'password',
       },
     }),
+    BullModule.forRoot({
+      connection: {
+        host: '0.0.0.0',
+        port: 6379,
+      },
+    }),
     LoggerModule.forRoot(),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
