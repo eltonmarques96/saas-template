@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
+import { LoggerModule } from 'nestjs-pino';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { RedisModule } from '@liaoliaots/nestjs-redis';
         password: 'password',
       },
     }),
+    LoggerModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],
