@@ -3,7 +3,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { getTypeOrmConfig } from '@config/typeorm.config';
+import { getTypeOrmConfig } from '@/database/typeorm.config';
 
 describe('UsersService', () => {
   let userService: UsersService;

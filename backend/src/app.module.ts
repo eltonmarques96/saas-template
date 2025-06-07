@@ -7,7 +7,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { getTypeOrmConfig } from '@config/typeorm.config';
+import { getTypeOrmConfig } from '@/database/typeorm.config';
 import { UsersModule } from '@users/users.module';
 import { BullModule } from '@nestjs/bullmq';
 

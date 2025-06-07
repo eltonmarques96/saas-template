@@ -1,5 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { User } from '@users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 import { DataSource } from 'typeorm';
 
 export function getTypeOrmConfig(): TypeOrmModuleOptions {
@@ -22,7 +22,7 @@ export function getTypeOrmConfig(): TypeOrmModuleOptions {
     synchronize: false,
     dropSchema: false,
     autoLoadEntities: true,
-    entities: [],
+    entities: [User],
   };
   if (isTest) {
     return sqliteConfiguration;
@@ -30,5 +30,5 @@ export function getTypeOrmConfig(): TypeOrmModuleOptions {
   return postgresConfiguration;
 }
 
-export const AppDataSource = new DataSource(getTypeOrmConfig() as any);
+const AppDataSource = new DataSource(getTypeOrmConfig() as any);
 export default AppDataSource;
