@@ -37,6 +37,7 @@ describe('UsersService', () => {
     const user = await userService.findByEmail(userParams.email);
     expect(user).toBeDefined();
     expect(user.email).toEqual(userParams.email);
+    expect(user.activated).toEqual(false);
   });
 
   it('should not create two users with same email', async () => {

@@ -1,5 +1,4 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { User } from '../users/entities/user.entity';
 import { DataSource } from 'typeorm';
 
 export function getTypeOrmConfig(): TypeOrmModuleOptions {
@@ -9,7 +8,7 @@ export function getTypeOrmConfig(): TypeOrmModuleOptions {
     database: ':memory:',
     synchronize: isTest,
     dropSchema: isTest,
-    entities: [User],
+    entities: [__dirname + '/../**/*.entity.ts'],
   };
   const postgresConfiguration: TypeOrmModuleOptions = {
     type: 'postgres',
@@ -21,7 +20,7 @@ export function getTypeOrmConfig(): TypeOrmModuleOptions {
     synchronize: false,
     dropSchema: false,
     autoLoadEntities: true,
-    entities: [User],
+    entities: [__dirname + '/../**/*.entity.ts'],
     migrations: [__dirname + '/migrations/*.ts'],
   };
   if (isTest) {

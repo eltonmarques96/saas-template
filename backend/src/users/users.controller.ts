@@ -10,14 +10,17 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ReturnUserDto } from './dto/return-user.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
-    return await this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto): Promise<ReturnUserDto> {
+    return await this.usersService
+      .create(createUserDto)
+      .then((user) => new ReturnUserDto(user));
   }
 
   @Get()
@@ -26,13 +29,20 @@ export class UsersController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.usersService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<ReturnUserDto> {
+    return await this.usersService
+      .findOne(id)
+      .then((user) => new ReturnUserDto(user));
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return await this.usersService.update(id, updateUserDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<ReturnUserDto> {
+    return await this.usersService
+      .update(id, updateUserDto)
+      .then((user) => new ReturnUserDto(user));
   }
 
   @Delete(':id')
