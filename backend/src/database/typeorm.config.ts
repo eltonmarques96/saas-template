@@ -4,7 +4,6 @@ import { DataSource } from 'typeorm';
 
 export function getTypeOrmConfig(): TypeOrmModuleOptions {
   const isTest = process.env.NODE_ENV === 'test';
-
   const sqliteConfiguration: TypeOrmModuleOptions = {
     type: 'sqlite',
     database: ':memory:',
@@ -14,7 +13,7 @@ export function getTypeOrmConfig(): TypeOrmModuleOptions {
   };
   const postgresConfiguration: TypeOrmModuleOptions = {
     type: 'postgres',
-    database: process.env.DB_DBNAME,
+    database: process.env.DB_NAME,
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
     username: process.env.DB_USERNAME,
@@ -23,6 +22,7 @@ export function getTypeOrmConfig(): TypeOrmModuleOptions {
     dropSchema: false,
     autoLoadEntities: true,
     entities: [User],
+    migrations: [__dirname + '/migrations/*.ts'],
   };
   if (isTest) {
     return sqliteConfiguration;

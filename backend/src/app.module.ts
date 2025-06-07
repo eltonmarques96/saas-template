@@ -13,7 +13,9 @@ import { BullModule } from '@nestjs/bullmq';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot(getTypeOrmConfig()),
     ThrottlerModule.forRoot({
       throttlers: [
