@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { getTypeOrmConfig } from '@/database/typeorm.config';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { MailService } from '@/mail/mail.service';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -26,10 +27,17 @@ describe('UsersController', () => {
       password: 'anotherPass',
     },
   ];
+  const mockMailService = {
+    sendUserConfirmation: jest.fn(),
+    sendPasswordRecovery: jest.fn(),
+  };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
-      providers: [UsersService],
+      providers: [
+        UsersService,
+        { provide: MailService, useValue: mockMailService },
+      ],
       imports: [
         TypeOrmModule.forFeature([User]),
         TypeOrmModule.forRoot(getTypeOrmConfig()),
@@ -71,7 +79,7 @@ describe('UsersController', () => {
     expect(result).not.toHaveProperty('password');
   });
 
-  it('should update n user', async () => {
+  it('should update an user', async () => {
     const user = await controller.create(mockUsers[0]);
     const dto: UpdateUserDto = { firstName: 'Updated' };
     const result = await controller.update(user.id, dto);

@@ -4,13 +4,20 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { getTypeOrmConfig } from '@/database/typeorm.config';
+import { MailService } from '@/mail/mail.service';
 
 describe('UsersService', () => {
   let userService: UsersService;
-
+  const mockMailService = {
+    sendUserConfirmation: jest.fn(),
+    sendPasswordRecovery: jest.fn(),
+  };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UsersService],
+      providers: [
+        UsersService,
+        { provide: MailService, useValue: mockMailService },
+      ],
       imports: [
         TypeOrmModule.forRoot(getTypeOrmConfig()),
         TypeOrmModule.forFeature([User]),
@@ -18,6 +25,10 @@ describe('UsersService', () => {
     }).compile();
 
     userService = module.get<UsersService>(UsersService);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -37,6 +48,11 @@ describe('UsersService', () => {
     const user = await userService.findByEmail(userParams.email);
     expect(user).toBeDefined();
     expect(user.email).toEqual(userParams.email);
+    expect(mockMailService.sendUserConfirmation).toHaveBeenCalledWith(
+      userParams.email,
+      userParams.firstName,
+      expect.any(String),
+    );
     expect(user.activated).toEqual(false);
   });
 

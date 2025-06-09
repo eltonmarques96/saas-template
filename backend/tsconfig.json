@@ -14,6 +14,8 @@
       "@/*": ["src/*"],
       "@app/*": ["src/app/*"],
       "@config/*": ["src/config/*"],
+      "@mail/*": ["src/mail/*"],
+      "@database/*": ["src/database/*"],
       "@users/*": ["src/users/*"]
     },
     "incremental": true,

@@ -8,8 +8,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { getTypeOrmConfig } from '@/database/typeorm.config';
-import { UsersModule } from '@users/users.module';
 import { BullModule } from '@nestjs/bullmq';
+import { UsersModule } from '@users/users.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { BullModule } from '@nestjs/bullmq';
     }),
     LoggerModule.forRoot(),
     UsersModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
