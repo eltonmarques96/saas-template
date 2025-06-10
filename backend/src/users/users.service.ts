@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -6,19 +10,23 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { MailService } from '@/mail/mail.service';
+import { TokenService } from '@/token/token.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly mailService: MailService,
+    private readonly tokenService: TokenService,
   ) {}
   async create(createUserDto: CreateUserDto) {
     const existingUser = await this.userRepository.findOne({
       where: { email: createUserDto.email },
     });
     if (existingUser) {
-      throw new Error(`User with email: ${createUserDto.email} already exists`);
+      throw new ConflictException(
+        `User with email: ${createUserDto.email} already exists`,
+      );
     }
     const saltOrRounds = 10;
     const password = 'random_password';
@@ -27,7 +35,10 @@ export class UsersService {
       ...createUserDto,
       password: hash,
     };
-    const token = 'abc';
+    const token = this.tokenService.generateToken(
+      { email: newUser.email },
+      60 * 24,
+    );
     const createdUser = await this.userRepository.save(newUser);
     await this.mailService.sendUserConfirmation(
       newUser.email,
@@ -44,7 +55,7 @@ export class UsersService {
   async findOne(id: string) {
     const user = await this.userRepository.findBy({ id });
     if (!user) {
-      throw new Error(`User not found`);
+      throw new NotFoundException(`User not found`);
     }
     return user[0];
   }
@@ -55,7 +66,7 @@ export class UsersService {
       relations: [],
     });
     if (!user) {
-      throw new Error(`User with email: ${email} not found`);
+      throw new NotFoundException(`User with email: ${email} not found`);
     }
     return user;
   }

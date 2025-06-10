@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MailService } from './mail.service';
 import { MailerService } from '@nestjs-modules/mailer';
+import { getQueueToken } from '@nestjs/bull';
 
 describe('MailService', () => {
   let service: MailService;
@@ -8,6 +9,9 @@ describe('MailService', () => {
 
   const mockMailerService = {
     sendMail: jest.fn(),
+  };
+  const mockMailQueue = {
+    add: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -17,6 +21,10 @@ describe('MailService', () => {
         {
           provide: MailerService,
           useValue: mockMailerService,
+        },
+        {
+          provide: getQueueToken('mail'),
+          useValue: mockMailQueue,
         },
       ],
     }).compile();

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
   providers: [MailService],
@@ -9,18 +10,21 @@ import { MailerModule } from '@nestjs-modules/mailer';
     MailerModule.forRootAsync({
       useFactory: () => ({
         transport: {
-          host: process.env.MAIL_HOST,
-          port: Number(process.env.MAIL_PORT, 10),
+          host: process.env.SMTP_HOST,
+          port: Number(process.env.SMTP_PORT),
           secure: process.env.MAIL_SECURE === 'true',
           auth: {
-            user: process.env.MAIL_USER,
-            pass: process.env.MAIL_PASSWORD,
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
           },
         },
         defaults: {
           from: `"No Reply" <${process.env.MAIL_FROM}>`,
         },
       }),
+    }),
+    BullModule.registerQueue({
+      name: 'mail',
     }),
   ],
 })

@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { getTypeOrmConfig } from '@/database/typeorm.config';
 import { MailService } from '@/mail/mail.service';
+import { TokenService } from '@/token/token.service';
 
 describe('UsersService', () => {
   let userService: UsersService;
@@ -16,6 +17,7 @@ describe('UsersService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsersService,
+        TokenService,
         { provide: MailService, useValue: mockMailService },
       ],
       imports: [

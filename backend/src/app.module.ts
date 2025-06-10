@@ -8,9 +8,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { getTypeOrmConfig } from '@/database/typeorm.config';
-import { BullModule } from '@nestjs/bullmq';
+import { BullModule } from '@nestjs/bull';
 import { UsersModule } from '@users/users.module';
 import { MailModule } from './mail/mail.module';
+import { TokenService } from './token/token.service';
 
 @Module({
   imports: [
@@ -28,15 +29,25 @@ import { MailModule } from './mail/mail.module';
     }),
     RedisModule.forRoot({
       config: {
-        host: '0.0.0.0',
-        port: 6379,
-        password: 'password',
+        host: process.env.REDIS_HOST,
+        port: Number(process.env.REDIS_PORT),
+        password: process.env.REDIS_PASSWORD,
       },
     }),
     BullModule.forRoot({
-      connection: {
-        host: '0.0.0.0',
-        port: 6379,
+      redis: {
+        host: process.env.REDIS_HOST,
+        password: process.env.REDIS_PASSWORD,
+        port: Number(process.env.REDIS_PORT),
+      },
+      defaultJobOptions: {
+        removeOnComplete: 100,
+        removeOnFail: 1000,
+        attempts: 5,
+        backoff: {
+          type: 'exponential',
+          delay: 1000,
+        },
       },
     }),
     LoggerModule.forRoot(),
@@ -44,7 +55,7 @@ import { MailModule } from './mail/mail.module';
     MailModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, TokenService],
 })
 export class AppModule {
   constructor(private dataSource: DataSource) {}

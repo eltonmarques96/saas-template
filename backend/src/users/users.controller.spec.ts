@@ -7,6 +7,7 @@ import { getTypeOrmConfig } from '@/database/typeorm.config';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { MailService } from '@/mail/mail.service';
+import { TokenService } from '@/token/token.service';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -36,6 +37,7 @@ describe('UsersController', () => {
       controllers: [UsersController],
       providers: [
         UsersService,
+        TokenService,
         { provide: MailService, useValue: mockMailService },
       ],
       imports: [
