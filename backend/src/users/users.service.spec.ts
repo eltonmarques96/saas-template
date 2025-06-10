@@ -6,6 +6,7 @@ import { User } from './entities/user.entity';
 import { getTypeOrmConfig } from '@/database/typeorm.config';
 import { MailService } from '@/mail/mail.service';
 import { TokenService } from '@/token/token.service';
+import * as jwt from 'jsonwebtoken';
 
 describe('UsersService', () => {
   let userService: UsersService;
@@ -119,5 +120,29 @@ describe('UsersService', () => {
     void expect(async () => {
       await userService.findByEmail(userParams.email);
     }).rejects.toThrow(`User with email: ${userParams.email} not found`);
+  });
+
+  it('should verify an user', async () => {
+    const userParams: CreateUserDto = {
+      firstName: 'John',
+      lastName: 'Lennon',
+      email: 'john.lennon@beatles.com',
+      phone: '+55718227383',
+      password: 'password123',
+    };
+
+    expect(userService).toBeDefined();
+    await userService.create(userParams);
+
+    const token = jwt.sign(
+      { email: userParams.email },
+      process.env.JWT_SECRET || 'your-secret-key',
+      { expiresIn: '1h', algorithm: 'HS256' },
+    );
+
+    let user = await userService.findByEmail(userParams.email);
+    await userService.verify(user.id, token);
+    user = await userService.findByEmail(userParams.email);
+    expect(user.activated).toBe(true);
   });
 });

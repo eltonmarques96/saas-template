@@ -7,6 +7,7 @@ import { getTypeOrmConfig } from '@/database/typeorm.config';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { MailService } from '@/mail/mail.service';
+import * as jwt from 'jsonwebtoken';
 import { TokenService } from '@/token/token.service';
 
 describe('UsersController', () => {
@@ -71,6 +72,22 @@ describe('UsersController', () => {
     expect(result).not.toHaveProperty('password');
   });
 
+  it('should not create two users with the same email', async () => {
+    const dto: CreateUserDto = {
+      firstName: 'Alice',
+      lastName: 'Brown',
+      email: 'alice@example.com',
+      phone: '1112223333',
+      password: 'password123',
+    };
+
+    const result = await controller.create(dto);
+    expect(result.email).toEqual(dto.email);
+
+    //const secondResult = await controller.create(dto);
+    //expect(secondResult.).toBeNull();
+  });
+
   it('should return one user by id', async () => {
     const user = await controller.create(mockUsers[0]);
     const result = await controller.findOne(user.id);
@@ -86,6 +103,18 @@ describe('UsersController', () => {
     const dto: UpdateUserDto = { firstName: 'Updated' };
     const result = await controller.update(user.id, dto);
     expect(result.firstName).toBe('Updated');
+  });
+
+  it('should verify an user', async () => {
+    const user = await controller.create(mockUsers[0]);
+    const token = jwt.sign(
+      { email: mockUsers[0].email },
+      process.env.JWT_SECRET || 'your-secret-key',
+      { expiresIn: '1h', algorithm: 'HS256' },
+    );
+
+    const result = await controller.verify(user.id, token);
+    expect(result.activated).toBe(true);
   });
 
   it('should remove an user', async () => {

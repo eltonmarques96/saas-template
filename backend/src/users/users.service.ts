@@ -87,6 +87,29 @@ export class UsersService {
     return user;
   }
 
+  async verify(id: string, token: string): Promise<User> {
+    let user = await this.userRepository.findOneBy({ id: id });
+    if (!user) {
+      throw new NotFoundException(`User not found`);
+    }
+    const payload = this.tokenService.verifyToken(token);
+    if (
+      !payload ||
+      typeof payload !== 'object' ||
+      payload === null ||
+      !('email' in payload) ||
+      (payload as any).email !== user.email
+    ) {
+      throw new NotFoundException(`Invalid token`);
+    }
+    await this.userRepository.update(id, { activated: true });
+    user = await this.userRepository.findOneBy({ id: id });
+    if (!user) {
+      throw new NotFoundException(`User not found`);
+    }
+    return user;
+  }
+
   async remove(id: string): Promise<string> {
     const user = await this.userRepository.findOneBy({ id });
     if (!user) {

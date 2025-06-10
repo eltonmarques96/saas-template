@@ -45,6 +45,16 @@ export class UsersController {
       .then((user) => new ReturnUserDto(user));
   }
 
+  @Patch(':id')
+  async verify(
+    @Param('id') id: string,
+    @Body() token: string,
+  ): Promise<ReturnUserDto> {
+    return await this.usersService
+      .verify(id, token)
+      .then((user) => new ReturnUserDto(user));
+  }
+
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return await this.usersService.remove(id);
