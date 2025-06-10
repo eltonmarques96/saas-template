@@ -23,6 +23,21 @@ export class UsersController {
       .then((user) => new ReturnUserDto(user));
   }
 
+  @Post()
+  async forgotpassword(
+    @Body() email: string,
+  ): Promise<{ status: number; body: { message: string } }> {
+    return await this.usersService.forgotpassword(email);
+  }
+
+  @Post()
+  async resetpassword(
+    @Body() token: string,
+    email: string,
+  ): Promise<{ status: number; body: { message: string } }> {
+    return await this.usersService.resetPassword(token, email);
+  }
+
   @Get()
   findAll() {
     return this.usersService.findAll();

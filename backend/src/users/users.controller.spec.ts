@@ -12,7 +12,7 @@ import { TokenService } from '@/token/token.service';
 
 describe('UsersController', () => {
   let controller: UsersController;
-
+  let tokenService: TokenService;
   const mockUsers = [
     {
       firstName: 'John',
@@ -46,7 +46,7 @@ describe('UsersController', () => {
         TypeOrmModule.forRoot(getTypeOrmConfig()),
       ],
     }).compile();
-
+    tokenService = module.get<TokenService>(TokenService);
     controller = module.get<UsersController>(UsersController);
   });
 
@@ -115,6 +115,26 @@ describe('UsersController', () => {
 
     const result = await controller.verify(user.id, token);
     expect(result.activated).toBe(true);
+  });
+
+  it('should send the request of forgot password of an user', async () => {
+    const user = await controller.create(mockUsers[0]);
+
+    const result = await controller.forgotpassword(user.email);
+    expect(result.status).toBe(200);
+    expect(result.body.message).toBe('Password reset email sent successfully.');
+  });
+
+  it('should reset the password of the user', async () => {
+    const validToken = tokenService.generateToken(
+      { email: mockUsers[0].email },
+      3600,
+    );
+    const user = await controller.create(mockUsers[0]);
+
+    const result = await controller.resetpassword(validToken, user.email);
+    expect(result.status).toBe(200);
+    expect(result.body.message).toBe('Password has been reset successfully.');
   });
 
   it('should remove an user', async () => {

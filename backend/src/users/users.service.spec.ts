@@ -10,6 +10,7 @@ import * as jwt from 'jsonwebtoken';
 
 describe('UsersService', () => {
   let userService: UsersService;
+  let tokenService: TokenService;
   const mockMailService = {
     sendUserConfirmation: jest.fn(),
     sendPasswordRecovery: jest.fn(),
@@ -27,6 +28,7 @@ describe('UsersService', () => {
       ],
     }).compile();
 
+    tokenService = module.get<TokenService>(TokenService);
     userService = module.get<UsersService>(UsersService);
   });
 
@@ -144,5 +146,53 @@ describe('UsersService', () => {
     await userService.verify(user.id, token);
     user = await userService.findByEmail(userParams.email);
     expect(user.activated).toBe(true);
+  });
+
+  it('should apply the forgot password method', async () => {
+    const userParams: CreateUserDto = {
+      firstName: 'John',
+      lastName: 'Lennon',
+      email: 'john.lennon@beatles.com',
+      phone: '+55718227383',
+      password: 'password123',
+    };
+
+    expect(userService).toBeDefined();
+    await userService.create(userParams);
+
+    const user = await userService.findByEmail(userParams.email);
+    const response = await userService.forgotpassword(user.email);
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe(
+      'Password reset email sent successfully.',
+    );
+  });
+
+  it('should reset the password', async () => {
+    const userParams: CreateUserDto = {
+      firstName: 'John',
+      lastName: 'Lennon',
+      email: 'john.lennon@beatles.com',
+      phone: '+55718227383',
+      password: 'password123',
+    };
+
+    expect(userService).toBeDefined();
+    await userService.create(userParams);
+
+    const validToken = tokenService.generateToken(
+      { email: userParams.email },
+      3600,
+    );
+    const resetPasswordData = {
+      token: validToken,
+      newPassword: 'newSecurePassword123',
+    };
+    const response = await userService.resetPassword(
+      resetPasswordData.token,
+      resetPasswordData.newPassword,
+    );
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Password has been reset successfully.');
   });
 });

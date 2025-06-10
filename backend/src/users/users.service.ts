@@ -87,6 +87,68 @@ export class UsersService {
     return user;
   }
 
+  async forgotpassword(
+    email: string,
+  ): Promise<{ status: number; body: { message: string } }> {
+    const user = await this.userRepository.findOneBy({ email: email });
+    if (!user) {
+      throw new NotFoundException(`User not found`);
+    }
+    const token = this.tokenService.generateToken({ email }, 60);
+
+    await this.mailService.sendPasswordRecovery(user.email, token);
+
+    if (!user) {
+      throw new NotFoundException(`User not found`);
+    }
+    return {
+      status: 200,
+      body: { message: 'Password reset email sent successfully.' },
+    };
+  }
+
+  async resetPassword(
+    token: string,
+    newPassword: string,
+  ): Promise<{ status: number; body: { message: string } }> {
+    if (newPassword.length < 8) {
+      return {
+        status: 400,
+        body: { message: 'Password must be at least 8 characters long.' },
+      };
+    }
+
+    const payload = this.tokenService.verifyToken(token);
+    if (payload === null) {
+      return { status: 403, body: { message: 'Invalid or expired token.' } };
+    }
+
+    if (
+      !payload ||
+      typeof payload !== 'object' ||
+      payload === null ||
+      !('email' in payload)
+    ) {
+      return { status: 403, body: { message: 'Invalid or expired token.' } };
+    }
+
+    const email = (payload as { email: string }).email;
+    const user = await this.userRepository.findOneBy({ email });
+    if (!user) {
+      throw new NotFoundException(`User not found`);
+    }
+
+    // Hash the new password and update the user
+    const saltOrRounds = 10;
+    const hash = await bcrypt.hash(newPassword, saltOrRounds);
+    await this.userRepository.update(user.id, { password: hash });
+
+    return {
+      status: 200,
+      body: { message: 'Password has been reset successfully.' },
+    };
+  }
+
   async verify(id: string, token: string): Promise<User> {
     let user = await this.userRepository.findOneBy({ id: id });
     if (!user) {
