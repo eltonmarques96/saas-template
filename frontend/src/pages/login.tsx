@@ -60,7 +60,8 @@ export default function LoginPage() {
 									<Input
 										type="email"
 										disabled={loading}
-										placeholder="E-mail"
+										placeholder="email"
+										id="email"
 										required
 										value={email}
 										onChange={(e) => setEmail(e.target.value)}
@@ -72,6 +73,7 @@ export default function LoginPage() {
 										<Label htmlFor="password">Senha</Label>
 										<Link
 											href="/forgot-password"
+											id="forgot-password"
 											className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
 										>
 											Esqueceu sua senha?
@@ -79,7 +81,8 @@ export default function LoginPage() {
 									</div>
 									<Input
 										type="password"
-										placeholder="Senha"
+										placeholder="senha"
+										id="password"
 										required
 										disabled={loading}
 										value={password}
