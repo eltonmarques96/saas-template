@@ -10,6 +10,14 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@app/*": ["src/app/*"],
+      "@config/*": ["src/config/*"],
+      "@mail/*": ["src/mail/*"],
+      "@database/*": ["src/database/*"],
+      "@users/*": ["src/users/*"]
+    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
