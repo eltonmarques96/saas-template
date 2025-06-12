@@ -8,6 +8,8 @@ export class ReturnUserDto {
   firstName: string;
   @IsString()
   lastName: string;
+  @IsString()
+  phone?: string;
   @IsEmail()
   email: string;
   @IsBoolean()
@@ -17,6 +19,7 @@ export class ReturnUserDto {
     this.id = user.id;
     this.firstName = user.firstName;
     this.lastName = user.lastName;
+    this.phone = user.phone;
     this.email = user.email;
     this.activated = user.activated;
   }

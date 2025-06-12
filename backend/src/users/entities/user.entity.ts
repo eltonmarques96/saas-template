@@ -20,11 +20,17 @@ export class User {
   @Column({ nullable: false, unique: true })
   email: string;
 
+  @Column({ nullable: true, unique: true })
+  phone: string;
+
   @Column({ nullable: false })
   password: string;
 
   @Column({ nullable: false, default: false })
   activated: boolean;
+
+  @Column({ default: true })
+  enabled: boolean;
 
   @CreateDateColumn()
   createdAt: string;

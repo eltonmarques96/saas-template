@@ -15,7 +15,8 @@ import { TokenService } from '@/token/token.service';
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     private readonly mailService: MailService,
     private readonly tokenService: TokenService,
   ) {}
@@ -52,7 +53,7 @@ export class UsersService {
     return `This action returns all users`;
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<User> {
     const user = await this.userRepository.findBy({ id });
     if (!user) {
       throw new NotFoundException(`User not found`);
@@ -94,7 +95,7 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException(`User not found`);
     }
-    const token = this.tokenService.generateToken({ email }, 60);
+    const token = this.tokenService.generateToken({ email }, 60 * 24);
 
     await this.mailService.sendPasswordRecovery(user.email, token);
 
@@ -117,7 +118,6 @@ export class UsersService {
         body: { message: 'Password must be at least 8 characters long.' },
       };
     }
-
     const payload = this.tokenService.verifyToken(token);
     if (payload === null) {
       return { status: 403, body: { message: 'Invalid or expired token.' } };
@@ -149,23 +149,28 @@ export class UsersService {
     };
   }
 
-  async verify(id: string, token: string): Promise<User> {
-    let user = await this.userRepository.findOneBy({ id: id });
-    if (!user) {
-      throw new NotFoundException(`User not found`);
-    }
+  async verify(token: string): Promise<User> {
     const payload = this.tokenService.verifyToken(token);
+
     if (
       !payload ||
       typeof payload !== 'object' ||
       payload === null ||
-      !('email' in payload) ||
-      (payload as any).email !== user.email
+      !('email' in payload)
     ) {
       throw new NotFoundException(`Invalid token`);
     }
-    await this.userRepository.update(id, { activated: true });
-    user = await this.userRepository.findOneBy({ id: id });
+    let user = await this.userRepository.findOneBy({
+      email: (payload as { email: string }).email,
+    });
+    if (!user) {
+      throw new NotFoundException(`User not found`);
+    }
+    if ((payload as { email: string }).email !== user.email) {
+      throw new NotFoundException(`Invalid token`);
+    }
+    await this.userRepository.update(user.id, { activated: true });
+    user = await this.userRepository.findOneBy({ id: user.id });
     if (!user) {
       throw new NotFoundException(`User not found`);
     }

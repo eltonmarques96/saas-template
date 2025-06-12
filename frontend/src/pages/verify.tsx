@@ -16,17 +16,17 @@ export default function Verify() {
       const token = getTokenFromUrl();
       if (token) {
         try {
-          const response = await api.get("/user/verify" + `?token=${token}`);
+          const response = await api.put("/users/verify" + `?token=${token}`);
           if (response.status === 200) {
             toast("Token verificado com sucesso");
           } else {
-            toast("Erro ao verifcar token", {
+            toast("Erro ao verificar token", {
               description: "Por favor, tente novamente.",
             });
           }
           window.location.href = "/login";
         } catch {
-          toast("Erro ao verifcar token", {
+          toast("Erro ao verificar token", {
             description: "Por favor, tente novamente.",
           });
         }
