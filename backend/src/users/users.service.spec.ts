@@ -45,7 +45,6 @@ describe('UsersService', () => {
       firstName: 'John',
       lastName: 'Lennon',
       email: 'john.lennon@beatles.com',
-      phone: '+55718227383',
       password: 'password123',
     };
     expect(userService).toBeDefined();
@@ -66,14 +65,12 @@ describe('UsersService', () => {
       firstName: 'John',
       lastName: 'Lennon',
       email: 'john.lennon@beatles.com',
-      phone: '+55718227383',
       password: 'password123',
     };
     const secondUserParams: CreateUserDto = {
       firstName: 'John',
       lastName: 'Lennon',
       email: 'john.lennon@beatles.com',
-      phone: '+55718227383',
       password: 'password123',
     };
     expect(userService).toBeDefined();
@@ -90,7 +87,6 @@ describe('UsersService', () => {
       firstName: 'John',
       lastName: 'Lennon',
       email: 'john.lennon@beatles.com',
-      phone: '+55718227383',
       password: 'password123',
     };
     const newParams: Partial<CreateUserDto> = {
@@ -110,7 +106,6 @@ describe('UsersService', () => {
       firstName: 'John',
       lastName: 'Lennon',
       email: 'john.lennon@beatles.com',
-      phone: '+55718227383',
       password: 'password123',
     };
     expect(userService).toBeDefined();
@@ -129,7 +124,6 @@ describe('UsersService', () => {
       firstName: 'John',
       lastName: 'Lennon',
       email: 'john.lennon@beatles.com',
-      phone: '+55718227383',
       password: 'password123',
     };
 
@@ -143,7 +137,7 @@ describe('UsersService', () => {
     );
 
     let user = await userService.findByEmail(userParams.email);
-    await userService.verify(user.id, token);
+    await userService.verify(token);
     user = await userService.findByEmail(userParams.email);
     expect(user.activated).toBe(true);
   });
@@ -153,7 +147,6 @@ describe('UsersService', () => {
       firstName: 'John',
       lastName: 'Lennon',
       email: 'john.lennon@beatles.com',
-      phone: '+55718227383',
       password: 'password123',
     };
 
@@ -173,7 +166,6 @@ describe('UsersService', () => {
       firstName: 'John',
       lastName: 'Lennon',
       email: 'john.lennon@beatles.com',
-      phone: '+55718227383',
       password: 'password123',
     };
 

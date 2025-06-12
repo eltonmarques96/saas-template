@@ -29,5 +29,7 @@ export function getTypeOrmConfig(): TypeOrmModuleOptions {
   return postgresConfiguration;
 }
 
-const AppDataSource = new DataSource(getTypeOrmConfig() as any);
+import { DataSourceOptions } from 'typeorm';
+
+const AppDataSource = new DataSource(getTypeOrmConfig() as DataSourceOptions);
 export default AppDataSource;

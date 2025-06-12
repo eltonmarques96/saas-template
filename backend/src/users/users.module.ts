@@ -10,5 +10,6 @@ import { TokenService } from '@/token/token.service';
   imports: [TypeOrmModule.forFeature([User]), MailModule],
   controllers: [UsersController],
   providers: [UsersService, TokenService],
+  exports: [UsersService],
 })
 export class UsersModule {}

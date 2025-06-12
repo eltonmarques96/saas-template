@@ -61,7 +61,7 @@ export default function RegisterPage() {
         password: hashedPassword,
       };
 
-      const response = await api.post("/user/register", payload);
+      const response = await api.post("/users", payload);
 
       if (response.status !== 201) {
         const data = await response.data();

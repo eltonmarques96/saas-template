@@ -8,7 +8,10 @@ export class TokenService {
     this.JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
   }
 
-  generateToken(payload: any, expiresIn: number = 60): string {
+  generateToken(
+    payload: string | object | Buffer,
+    expiresIn: number = 60,
+  ): string {
     const token: string = jwt.sign(payload, this.JWT_SECRET, { expiresIn });
     return token;
   }

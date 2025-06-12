@@ -80,7 +80,7 @@ class AWSService {
       }
       return apiResponse.data.url;
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -99,7 +99,7 @@ class AWSService {
       });
       return true;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return false;
     }
   }
@@ -109,7 +109,6 @@ class AWSService {
       const parsedUrl = new URL(key);
 
       const parsedKey = decodeURIComponent(parsedUrl.pathname.slice(1)); // remove leading '/'
-      console.log("Key decodificada: ", parsedKey);
       const params = {
         Bucket: this.BUCKET,
         Key: parsedKey,
@@ -119,8 +118,6 @@ class AWSService {
       const url = await getSignedUrl(this.awsClient, command, {
         expiresIn: 2 * 60,
       });
-      console.log("Key gerada: ", key);
-      console.log("URL gerada: ", url);
       return url;
     } catch (error) {
       console.error("Error downloading file:", error);

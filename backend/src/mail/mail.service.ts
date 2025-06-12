@@ -30,7 +30,7 @@ export class MailService {
 
   async sendPasswordRecovery(email: string, token: string): Promise<void> {
     const resetLink = `${process.env.WEB_URL}/reset-password?token=${token}`;
-    await this.queue.add('sendWelcomeEmail', {
+    await this.queue.add('resetPasswordEmail', {
       email: email,
       resetLink,
     });

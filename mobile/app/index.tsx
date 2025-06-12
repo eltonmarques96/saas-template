@@ -1,4 +1,5 @@
 import Button from "@/components/Button";
+import api from "@/services/api";
 import {
   Container,
   FormField,
@@ -7,6 +8,7 @@ import {
   SubButtonsContainer,
 } from "@/styles/App";
 import { useRouter } from "expo-router";
+import md5 from "md5";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native";
 
@@ -15,8 +17,15 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    console.log("Login with:", email, password);
+  const handleLogin = async () => {
+    const hashedPassword = md5(password);
+    const response = await api.post("/auth/login", {
+      email,
+      password: hashedPassword,
+    });
+    if (response.status === 200) {
+      alert("Login successful");
+    }
   };
 
   const handleRegister = () => {

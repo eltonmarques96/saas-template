@@ -12,6 +12,7 @@ import { BullModule } from '@nestjs/bull';
 import { UsersModule } from '@users/users.module';
 import { MailModule } from './mail/mail.module';
 import { TokenService } from './token/token.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { TokenService } from './token/token.service';
     LoggerModule.forRoot(),
     UsersModule,
     MailModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, TokenService],

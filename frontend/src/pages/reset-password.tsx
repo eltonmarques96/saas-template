@@ -52,7 +52,7 @@ export default function ResetPasswordPage() {
         return;
       }
 
-      const response = await api.post("/user/resetpassword", payload);
+      const response = await api.post("/users/resetpassword", payload);
       if (response.status !== 200) {
         const data = await response.data();
         throw new Error(data.message || "Falha ao registrar conta");

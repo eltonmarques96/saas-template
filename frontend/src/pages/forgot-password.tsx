@@ -22,7 +22,7 @@ export default function ForgotPasswordPage() {
   const submitForm = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await api.post("/user/forgotpassword", {
+      await api.post("/users/forgotpassword", {
         email,
       });
       toast("Link com reset de senha enviado para o seu e-mail");

@@ -59,7 +59,6 @@ describe('UsersController', () => {
       firstName: 'Alice',
       lastName: 'Brown',
       email: 'alice@example.com',
-      phone: '1112223333',
       password: 'password123',
     };
 
@@ -77,7 +76,6 @@ describe('UsersController', () => {
       firstName: 'Alice',
       lastName: 'Brown',
       email: 'alice@example.com',
-      phone: '1112223333',
       password: 'password123',
     };
 
@@ -106,21 +104,21 @@ describe('UsersController', () => {
   });
 
   it('should verify an user', async () => {
-    const user = await controller.create(mockUsers[0]);
+    await controller.create(mockUsers[0]);
     const token = jwt.sign(
       { email: mockUsers[0].email },
       process.env.JWT_SECRET || 'your-secret-key',
       { expiresIn: '1h', algorithm: 'HS256' },
     );
 
-    const result = await controller.verify(user.id, token);
+    const result = await controller.verify(token);
     expect(result.activated).toBe(true);
   });
 
   it('should send the request of forgot password of an user', async () => {
     const user = await controller.create(mockUsers[0]);
 
-    const result = await controller.forgotpassword(user.email);
+    const result = await controller.forgotpassword({ email: user.email });
     expect(result.status).toBe(200);
     expect(result.body.message).toBe('Password reset email sent successfully.');
   });
@@ -130,9 +128,12 @@ describe('UsersController', () => {
       { email: mockUsers[0].email },
       3600,
     );
-    const user = await controller.create(mockUsers[0]);
+    await controller.create(mockUsers[0]);
 
-    const result = await controller.resetpassword(validToken, user.email);
+    const result = await controller.resetpassword({
+      token: validToken,
+      newPassword: 'abcdefgg123',
+    });
     expect(result.status).toBe(200);
     expect(result.body.message).toBe('Password has been reset successfully.');
   });
