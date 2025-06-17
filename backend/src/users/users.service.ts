@@ -30,8 +30,7 @@ export class UsersService {
       );
     }
     const saltOrRounds = 10;
-    const password = 'random_password';
-    const hash = await bcrypt.hash(password, saltOrRounds);
+    const hash = await bcrypt.hash(createUserDto.password, saltOrRounds);
     const newUser = {
       ...createUserDto,
       password: hash,
