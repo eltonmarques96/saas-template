@@ -13,6 +13,7 @@ import { UsersModule } from '@users/users.module';
 import { MailModule } from './mail/mail.module';
 import { TokenService } from './token/token.service';
 import { AuthModule } from './auth/auth.module';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { AuthModule } from './auth/auth.module';
         },
       ],
     }),
+    PrometheusModule.register(),
     RedisModule.forRoot({
       config: {
         host: process.env.REDIS_HOST,
