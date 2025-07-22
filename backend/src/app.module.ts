@@ -30,7 +30,6 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
         },
       ],
     }),
-    PrometheusModule.register(),
     RedisModule.forRoot({
       config: {
         host: process.env.REDIS_HOST,
@@ -53,6 +52,9 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
           delay: 1000,
         },
       },
+    }),
+    PrometheusModule.register({
+      path: '/metrics',
     }),
     LoggerModule.forRoot(),
     UsersModule,
