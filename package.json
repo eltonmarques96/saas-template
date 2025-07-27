@@ -1,6 +1,10 @@
 {
 	"name": "saas-template",
-	"version": "1.0.0",
+	"version": "1.1.0",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/eltonmarques96/saas-template.git"
+	},
 	"scripts": {
 		"commit": "cz",
 		"prepare": "husky",
@@ -22,8 +26,7 @@
 		"husky": "^9.1.7",
 		"npm-run-all": "^4.1.5",
 		"release-it": "^15.1.1",
-		 "@release-it/conventional-changelog": "^5.0.0"
-
+		"@release-it/conventional-changelog": "^5.0.0"
 	},
 	"packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
 	"husky": {
@@ -32,37 +35,38 @@
 		}
 	},
 	"release-it": {
-    "git": {
-			 "commit": true,
-      "requireCleanWorkingDir": false,
-      "commitMessage": "chore: release v${version}"
-    },
-    "github": {
-      "release": true
-    },
-    "npm": {
-      "publish": false
-    },
-    "plugins": {
-      "@release-it/conventional-changelog": {
-        "infile": "CHANGELOG.md",
-        "preset": {
-          "name": "conventionalcommits",
-          "types": [
-            {
-              "type": "feat",
-              "section": "Features"
-            },
-            {
-              "type": "fix",
-              "section": "Bug Fixes"
-            },
-            {}
-          ]
-        }
-      }
-      }
-      },
+		"git": {
+			"commit": false,
+			"push": false,
+			"requireCleanWorkingDir": false,
+			"commitMessage": "chore: release v${version}"
+		},
+		"github": {
+			"release": true
+		},
+		"npm": {
+			"publish": false
+		},
+		"plugins": {
+			"@release-it/conventional-changelog": {
+				"infile": "CHANGELOG.md",
+				"preset": {
+					"name": "conventionalcommits",
+					"types": [
+						{
+							"type": "feat",
+							"section": "Features"
+						},
+						{
+							"type": "fix",
+							"section": "Bug Fixes"
+						},
+						{}
+					]
+				}
+			}
+		}
+	},
 	"config": {
 		"commitizen": {
 			"path": "./node_modules/cz-conventional-changelog"
