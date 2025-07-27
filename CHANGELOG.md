@@ -1,5 +1,19 @@
 
 
+## [1.1.2](https://github.com/eltonmarques96/saas-template/compare/1.1.0...1.1.2) (2025-07-27)
+
+
+### Bug Fixes
+
+* **project:** add function to run post commit ([13701e3](https://github.com/eltonmarques96/saas-template/commit/13701e3b28a72cf7a1bccac2fe2dd0c1cba84ee9))
+
+## [1.1.1](https://github.com/eltonmarques96/saas-template/compare/1.1.0...1.1.1) (2025-07-27)
+
+
+### Bug Fixes
+
+* **project:** add function to run post commit ([13701e3](https://github.com/eltonmarques96/saas-template/commit/13701e3b28a72cf7a1bccac2fe2dd0c1cba84ee9))
+
 ## 1.1.0 (2025-07-27)
 
 
