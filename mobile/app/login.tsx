@@ -38,7 +38,29 @@ const Login = () => {
 
   return (
     <Container>
-      <PageTitle>Simula Aí</PageTitle>
+      <PageTitle>Login</PageTitle>
+      <FormField
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
+      />
+      <FormField
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+      <Button onPress={handleLogin} title={"Login"} />
+      <SubButtonsContainer>
+        <TouchableOpacity onPress={handleRegister}>
+          <LinksButtons>Register</LinksButtons>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleForgotPassword}>
+          <LinksButtons>Forgot Password</LinksButtons>
+        </TouchableOpacity>
+      </SubButtonsContainer>
     </Container>
   );
 };

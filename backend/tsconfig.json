@@ -15,8 +15,9 @@
       "@app/*": ["src/app/*"],
       "@config/*": ["src/config/*"],
       "@mail/*": ["src/mail/*"],
-      "@database/*": ["src/database/*"],
-      "@users/*": ["src/users/*"]
+      "@database/*": ["src/utils/database/*"],
+      "@users/*": ["src/users/*"],
+      "@exams/*": ["src/exams/*"]
     },
     "incremental": true,
     "skipLibCheck": true,

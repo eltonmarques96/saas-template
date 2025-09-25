@@ -3,7 +3,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { getTypeOrmConfig } from '@/database/typeorm.config';
+import { getTypeOrmConfig } from '@/utils/database/typeorm.config';
 import { MailService } from '@/mail/mail.service';
 import { TokenService } from '@/token/token.service';
 import * as jwt from 'jsonwebtoken';

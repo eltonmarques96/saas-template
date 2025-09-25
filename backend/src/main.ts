@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-import './tracing';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger } from 'nestjs-pino';
@@ -10,7 +8,6 @@ import {
   SwaggerModule,
 } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
-import * as csurf from 'csurf';
 import helmet from 'helmet';
 
 async function bootstrap() {
@@ -33,27 +30,8 @@ async function bootstrap() {
     SwaggerModule.setup('docs', app, documentFactory);
   }
   app.use(cookieParser());
-  const csrfProtection = csurf({
-    cookie: {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-    },
-  });
-  app.use((req, res, next) => {
-    const safeMethods = ['GET', 'HEAD', 'OPTIONS'];
-    if (safeMethods.includes(req.method)) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return next(); // ignora CSRF
-    }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return csrfProtection(req, res, next); // aplica CSRF apenas nas rotas perigosas
-  });
-  app.enableCors({
-    origin: [process.env.WEB_URL],
-    credentials: true,
-  });
+
   app.use(helmet());
-  await app.listen(process.env.APP_PORT ?? 6002);
+  await app.listen(process.env.APP_PORT ?? 8000);
 }
 bootstrap();
