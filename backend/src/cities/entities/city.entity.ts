@@ -35,7 +35,7 @@ export class City {
   state: State;
 
   @Column()
-  estado_id: number;
+  state_id: number;
 
   @OneToMany(() => User, (usuario) => usuario, { cascade: true })
   users: User[];

@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -11,7 +12,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { MailService } from '@/mail/mail.service';
 import { TokenService } from '@/token/token.service';
-
+import { ulid } from 'ulid';
+import { TokenExpiredError } from '@nestjs/jwt';
+import * as jwt from 'jsonwebtoken';
 @Injectable()
 export class UsersService {
   constructor(
@@ -31,10 +34,13 @@ export class UsersService {
     }
     const saltOrRounds = 10;
     const hash = await bcrypt.hash(createUserDto.password, saltOrRounds);
-    const newUser = {
-      ...createUserDto,
-      password: hash,
-    };
+
+    const newUser = new User();
+    newUser.id = ulid();
+    newUser.firstName = createUserDto.firstName;
+    newUser.lastName = createUserDto.lastName;
+    newUser.email = createUserDto.email;
+    newUser.password = hash;
     const token = this.tokenService.generateToken(
       { email: newUser.email },
       60 * 24,
@@ -149,31 +155,49 @@ export class UsersService {
   }
 
   async verify(token: string): Promise<User> {
-    const payload = this.tokenService.verifyToken(token);
+    try {
+      const payload = this.tokenService.verifyToken(token);
+      if (
+        !payload ||
+        typeof payload !== 'object' ||
+        payload === null ||
+        !('email' in payload)
+      ) {
+        throw new NotFoundException(`Invalid token`);
+      }
+      let user = await this.userRepository.findOneBy({
+        email: (payload as { email: string }).email,
+      });
+      if (!user) {
+        throw new NotFoundException(`User not found`);
+      }
+      if ((payload as { email: string }).email !== user.email) {
+        throw new NotFoundException(`Invalid token`);
+      }
+      await this.userRepository.update(user.id, { activated: true });
+      user = await this.userRepository.findOneBy({ id: user.id });
+      if (!user) {
+        throw new NotFoundException(`User not found`);
+      }
+      return user;
+    } catch (error) {
+      if (error instanceof TokenExpiredError) {
+        const decoded = jwt.decode(token) as {
+          id?: string;
+        };
+        if (decoded?.id) {
+          await this.remove(decoded.id);
+        }
 
-    if (
-      !payload ||
-      typeof payload !== 'object' ||
-      payload === null ||
-      !('email' in payload)
-    ) {
-      throw new NotFoundException(`Invalid token`);
+        throw new ForbiddenException(
+          'Token expirado, por favor, registre novamente a sua conta',
+        );
+      }
+      if (error instanceof jwt.JsonWebTokenError) {
+        throw new ForbiddenException('Token inválido');
+      }
+      throw error;
     }
-    let user = await this.userRepository.findOneBy({
-      email: (payload as { email: string }).email,
-    });
-    if (!user) {
-      throw new NotFoundException(`User not found`);
-    }
-    if ((payload as { email: string }).email !== user.email) {
-      throw new NotFoundException(`Invalid token`);
-    }
-    await this.userRepository.update(user.id, { activated: true });
-    user = await this.userRepository.findOneBy({ id: user.id });
-    if (!user) {
-      throw new NotFoundException(`User not found`);
-    }
-    return user;
   }
 
   async remove(id: string): Promise<string> {

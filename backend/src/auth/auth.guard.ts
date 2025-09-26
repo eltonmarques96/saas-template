@@ -1,9 +1,10 @@
-import { IS_PUBLIC_KEY } from '@/metadata';
+import { IS_ADMIN_KEY, IS_PUBLIC_KEY } from '@/utils/decorators/metadata';
 import {
   CanActivate,
   ExecutionContext,
   Injectable,
   UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
@@ -11,7 +12,6 @@ import { Request } from 'express';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  // Lista de caminhos liberados (sem autenticação)
   private readonly publicRoutes: string[] = [
     '/metrics',
     '/health',
@@ -27,13 +27,11 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
 
-    // Liberação via metadata (@Public())
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);
 
-    // Liberação via array de caminhos
     const path = request.path;
     const isWhitelisted = this.publicRoutes.includes(path);
 
@@ -43,7 +41,7 @@ export class AuthGuard implements CanActivate {
 
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      throw new UnauthorizedException('Token ausente');
+      throw new UnauthorizedException('Autorização inválida');
     }
 
     try {
@@ -51,8 +49,17 @@ export class AuthGuard implements CanActivate {
         secret: process.env.JWT_SECRET,
       });
       request['user'] = payload;
+
+      const isAdminRequired = this.reflector.getAllAndOverride<boolean>(
+        IS_ADMIN_KEY,
+        [context.getHandler(), context.getClass()],
+      );
+
+      if (isAdminRequired && payload.role !== 'admin') {
+        throw new ForbiddenException('Acesso restrito');
+      }
     } catch {
-      throw new UnauthorizedException('Token inválido ou expirado');
+      throw new UnauthorizedException('Autorização inválida');
     }
 
     return true;

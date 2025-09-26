@@ -1,14 +1,19 @@
 import {
   Entity,
   Column,
-  PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  PrimaryColumn,
 } from 'typeorm';
+
+export enum RoleType {
+  default = 'default',
+  admin = 'admin',
+}
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn({ type: 'varchar', length: 26 })
   id: string;
 
   @Column({ nullable: false })
@@ -29,8 +34,13 @@ export class User {
   @Column({ nullable: false, default: false })
   activated: boolean;
 
-  @Column({ default: true })
-  enabled: boolean;
+  @Column({
+    nullable: false,
+    type: 'text',
+    enum: RoleType,
+    default: RoleType.default,
+  })
+  role: RoleType;
 
   @CreateDateColumn()
   createdAt: string;

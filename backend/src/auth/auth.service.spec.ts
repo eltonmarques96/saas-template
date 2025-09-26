@@ -65,12 +65,9 @@ describe('AuthService', () => {
     };
     expect(userService).toBeDefined();
     await userService.create(userParams);
-    const token = jwt.sign({ email: userParams.email }, 'your-secret-key', {
-      expiresIn: '1h',
-      algorithm: 'HS256',
-    });
+    const token = tokenService.generateToken({ email: userParams.email }, 3600);
     const userVerification = await userService.verify(token);
-    expect(userVerification.enabled).toEqual(true);
+    expect(userVerification.activated).toEqual(true);
     const login = await service.signIn(userParams.email, userParams.password);
     expect(login).toBeDefined();
     expect(login.token).toBeDefined();
@@ -106,7 +103,7 @@ describe('AuthService', () => {
       algorithm: 'HS256',
     });
     const userVerification = await userService.verify(token);
-    expect(userVerification.enabled).toEqual(true);
+    expect(userVerification.activated).toEqual(true);
     const login = await service.signIn(userParams.email, userParams.password);
     expect(login).toBeDefined();
     expect(login.token).toBeDefined();

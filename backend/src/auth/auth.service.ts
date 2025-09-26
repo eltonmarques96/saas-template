@@ -14,15 +14,10 @@ export class AuthService {
     const user = await this.usersService.findByEmail(email);
 
     const isPasswordValid = await bcrypt.compare(pass, user.password);
-    if (
-      !isPasswordValid ||
-      !user ||
-      user.enabled === false ||
-      user.activated === false
-    ) {
+    if (!isPasswordValid || !user || user.activated === false) {
       throw new UnauthorizedException('User not enabled');
     }
-    const payload = { sub: user.id, email: user.email };
+    const payload = { sub: user.id, role: user.role };
 
     return {
       token: await this.jwtService.signAsync(payload),

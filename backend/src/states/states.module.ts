@@ -11,4 +11,4 @@ import { City } from '@/cities/entities/city.entity';
   controllers: [estadosController],
   providers: [statesService],
 })
-export class estadosModule {}
+export class StatesModule {}

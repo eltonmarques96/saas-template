@@ -17,6 +17,9 @@ import { AuthModule } from './auth/auth.module';
 import { ExamsModule } from './exams/exams.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import KeyvRedis from '@keyv/redis';
+import { AdminsModule } from './admins/admins.module';
+import { CitiesModule } from './cities/cities.module';
+import { StatesModule } from './states/states.module';
 
 @Module({
   imports: [
@@ -82,6 +85,9 @@ import KeyvRedis from '@keyv/redis';
     AuthModule,
     ExamsModule,
     OrganizationsModule,
+    AdminsModule,
+    CitiesModule,
+    StatesModule,
   ],
   controllers: [AppController],
   providers: [

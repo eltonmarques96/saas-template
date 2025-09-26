@@ -1,0 +1,837 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/users": {
+      "post": {
+        "operationId": "UsersController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      },
+      "get": {
+        "operationId": "UsersController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/forgotpassword": {
+      "post": {
+        "operationId": "UsersController_forgotpassword",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/resetpassword": {
+      "post": {
+        "operationId": "UsersController_resetpassword",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "operationId": "UsersController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      },
+      "patch": {
+        "operationId": "UsersController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      },
+      "delete": {
+        "operationId": "UsersController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/verify": {
+      "put": {
+        "operationId": "UsersController_verify",
+        "parameters": [
+          {
+            "name": "token",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_signIn",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User authenticated"
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "summary": "Authenticated User",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/profile": {
+      "get": {
+        "operationId": "AuthController_getProfile",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer Token",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return User Info"
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "summary": "Get authenticated user info",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/csrf-token": {
+      "get": {
+        "operationId": "AuthController_getCsrfToken",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/exams": {
+      "post": {
+        "operationId": "ExamsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateExamDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Exams"
+        ]
+      },
+      "get": {
+        "operationId": "ExamsController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Exams"
+        ]
+      }
+    },
+    "/exams/{id}": {
+      "get": {
+        "operationId": "ExamsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Exams"
+        ]
+      },
+      "patch": {
+        "operationId": "ExamsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateExamDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Exams"
+        ]
+      },
+      "delete": {
+        "operationId": "ExamsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Exams"
+        ]
+      }
+    },
+    "/organizations": {
+      "post": {
+        "operationId": "OrganizationsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrganizationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Organizations"
+        ]
+      },
+      "get": {
+        "operationId": "OrganizationsController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Organizations"
+        ]
+      }
+    },
+    "/organizations/{id}": {
+      "get": {
+        "operationId": "OrganizationsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Organizations"
+        ]
+      },
+      "patch": {
+        "operationId": "OrganizationsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrganizationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Organizations"
+        ]
+      },
+      "delete": {
+        "operationId": "OrganizationsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Organizations"
+        ]
+      }
+    },
+    "/admin/login": {
+      "post": {
+        "operationId": "AdminsController_signIn",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuario autenticado"
+          },
+          "403": {
+            "description": "Acesso Negado"
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "summary": "Usuário Autenticado",
+        "tags": [
+          "Admins"
+        ]
+      }
+    },
+    "/admin/overview": {
+      "get": {
+        "operationId": "AdminsController_overview",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Admins"
+        ]
+      }
+    },
+    "/admin": {
+      "get": {
+        "operationId": "AdminsController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Admins"
+        ]
+      }
+    },
+    "/admin/{id}": {
+      "get": {
+        "operationId": "AdminsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Admins"
+        ]
+      },
+      "patch": {
+        "operationId": "AdminsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAdminDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Admins"
+        ]
+      },
+      "delete": {
+        "operationId": "AdminsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Admins"
+        ]
+      }
+    },
+    "/cities": {
+      "get": {
+        "operationId": "CitiesController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Cities"
+        ]
+      }
+    },
+    "/cities/{id}": {
+      "get": {
+        "operationId": "CitiesController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "Cities"
+        ]
+      }
+    },
+    "/states": {
+      "get": {
+        "operationId": "estadosController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "States"
+        ]
+      }
+    },
+    "/states/{id}": {
+      "get": {
+        "operationId": "estadosController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "Erro Interno do Servidor"
+          }
+        },
+        "tags": [
+          "States"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "190Bahia",
+    "description": "Projeto SSP-BA",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateExamDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateExamDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateOrganizationDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateOrganizationDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateAdminDto": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  }
+}
