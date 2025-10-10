@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
-import './tracing';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger } from 'nestjs-pino';
@@ -24,7 +23,7 @@ async function bootstrap() {
       autoTagControllers: true,
     };
     const config = new DocumentBuilder()
-      .setTitle('SaaS Template')
+      .setTitle('Simula AI')
       .setDescription('Dev: Elton Marques')
       .setVersion('1.0')
       .build();
@@ -47,7 +46,7 @@ async function bootstrap() {
       return next(); // ignora CSRF
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return csrfProtection(req, res, next); // aplica CSRF apenas nas rotas perigosas
+    return csrfProtection(req, res, next);
   });
   app.enableCors({
     origin: [process.env.WEB_URL],
