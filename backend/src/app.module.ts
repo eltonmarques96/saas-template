@@ -32,16 +32,16 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
     }),
     RedisModule.forRoot({
       config: {
-        host: process.env.REDIS_HOST,
-        port: Number(process.env.REDIS_PORT),
-        password: process.env.REDIS_PASSWORD,
+        host: process.env.REDIS_CACHE_HOST,
+        port: Number(process.env.REDIS_CACHE_PORT),
+        password: process.env.REDIS_CACHE_PASSWORD,
       },
     }),
     BullModule.forRoot({
       redis: {
-        host: process.env.REDIS_HOST,
-        password: process.env.REDIS_PASSWORD,
-        port: Number(process.env.REDIS_PORT),
+        host: process.env.REDIS_QUEUE_HOST,
+        password: process.env.REDIS_QUEUE_PASSWORD,
+        port: Number(process.env.REDIS_QUEUE_PORT),
       },
       defaultJobOptions: {
         removeOnComplete: 100,
