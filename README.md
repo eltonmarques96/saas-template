@@ -1,5 +1,5 @@
 # Saas Template
-Template with basic CRUD template using NodeJS with OvernightJS (backend), ReactJS (frontend) and Expo (mobile)
+Template with basic CRUD template using NodeJS with NestJS (backend), ReactJS (frontend) and Expo (mobile)
 
 ### Functionalites
 - Create User
@@ -12,9 +12,8 @@ Template with basic CRUD template using NodeJS with OvernightJS (backend), React
 ## Tools
 ### Backend
 #### Tools
-- NodeJS
+- NodeJS with NestJS
 - Typescript
-- Overnight JS (Routes)
 - Jest (Tests)
 - TypeORM
 - Postgres
