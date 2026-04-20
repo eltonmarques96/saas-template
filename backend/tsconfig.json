@@ -16,7 +16,13 @@
       "@config/*": ["src/config/*"],
       "@mail/*": ["src/mail/*"],
       "@database/*": ["src/database/*"],
-      "@users/*": ["src/users/*"]
+      "@users/*": ["src/users/*"],
+      "@alertas/*": ["src/alertas/*"],
+      "@veiculos/*": ["src/veiculos/*"],
+      "@objetos/*": ["src/veiculos/*"],
+      "@brazilian_person/*": ["src/brazilian_person/*"],
+      "@estados/*": ["src/estados/*"],
+      "@cities/*": ["src/cities/*"]
     },
     "incremental": true,
     "skipLibCheck": true,

@@ -1,0 +1,31 @@
+{
+  "home": {
+    "title": "Discover your next books",
+    "search_placeholder": "Search books...",
+    "popular_books": "Popular Books",
+    "categories": "Categories"
+  },
+  "book": {
+    "synopsis": "Synopsis",
+    "pages": "Pages",
+    "author": "Author",
+    "publisher": "Publisher",
+    "isbn": "ISBN",
+    "published_date": "Published Date",
+    "add_to_collection": "Add to Collection",
+    "reviews": "Reviews",
+    "write_review": "Write a Review",
+    "no_reviews": "No reviews yet"
+  },
+  "nav": {
+    "login": "Login",
+    "register": "Register",
+    "my_collections": "My Collections",
+    "logout": "Logout"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "forgot_password": "Forgot password"
+  }
+}

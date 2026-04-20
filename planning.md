@@ -1,8 +1,18 @@
 # My BookShelf
 
+Antes de começar a implementar, crie um arquivo PROJECT.md na raiz com o plano completo
+Analise os projetos já criados para o admin, backend, frontend e mobile e utilize o que já foi implementado.
+
+## Identidade visual
+Para o frontend e mobile, utilize uma logo simples que remeta a livros
+todo o tema será baseado no tema marrom, lembrando uma biblioteca clássica
+Crie toda a identidade visual, logo e paleta de cores, e mantenha esse padrão para o frontend e o mobile
+
+
 ## Backend
 O backend terá que ter um API Gateway pois contaremos com dois microserviços
-1 - Sistema de cadastro e busca de livros
+
+1 - Sistema de cadastro e busca de livros (NestJS -> Pasta Backend)
 Os livros não serão cadastrados manualmente, eles serão cadastrados por demanda, utilizando a API do https://openlibrary.org/developers/api. E seguirá o seguinte fluxo:
   - O usuário buscará pelo livro na barra de pesquisa
   - Se o livro já estiver cadastrado no banco de dados, retorna as informações do Banco

@@ -1,37 +1,27 @@
-import axios, { AxiosHeaders, InternalAxiosRequestConfig } from "axios";
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
+import { router } from "expo-router";
+
 const api = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_API_URL || "http://192.168.15.12:8001",
+  baseURL: process.env.EXPO_PUBLIC_API_URL,
+  withCredentials: true,
 });
 
-api.interceptors.request.use(
-  async (config: InternalAxiosRequestConfig) => {
-    const method = config.method?.toLowerCase();
-    const METHODS_REQUIRING_CSRF = ["post", "put", "patch", "delete"];
+api.interceptors.request.use(async (config) => {
+  const token = await SecureStore.getItemAsync("jwt_token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
 
-    // Se o método exige CSRF
-    if (method && METHODS_REQUIRING_CSRF.includes(method)) {
-      try {
-        // Requisição para obter o token
-        const { data: csrfData } = await api.get("/auth/csrf-token");
-        const csrfToken = csrfData?.csrfToken;
-
-        if (!config.headers) {
-          config.headers = new AxiosHeaders(); // ou {}
-        }
-
-        // Define o cabeçalho CSRF
-        if (csrfToken) {
-          config.headers.set("X-CSRF-Token", csrfToken);
-        }
-      } catch (err) {
-        console.warn("Erro ao buscar token CSRF:", err);
-        throw err;
-      }
+api.interceptors.response.use(
+  (res) => res,
+  async (error) => {
+    if (error.response?.status === 401) {
+      await SecureStore.deleteItemAsync("jwt_token");
+      router.replace("/login" as any);
     }
-
-    return config;
+    return Promise.reject(error);
   },
-  (error) => Promise.reject(error)
 );
 
 export default api;

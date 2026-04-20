@@ -1,0 +1,12 @@
+{
+  "home_title": "MyBookShelf",
+  "search_placeholder": "Search books...",
+  "popular_books": "Popular Books",
+  "categories": "Categories",
+  "no_reviews": "No reviews yet",
+  "add_to_collection": "Add to Collection",
+  "login": "Login",
+  "register": "Register",
+  "logout": "Logout",
+  "my_collections": "My Collections"
+}

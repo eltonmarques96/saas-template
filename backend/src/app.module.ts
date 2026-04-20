@@ -14,6 +14,14 @@ import { MailModule } from './mail/mail.module';
 import { TokenService } from './token/token.service';
 import { AuthModule } from './auth/auth.module';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
+import { AuthorsModule } from './authors/authors.module';
+import { CategoriesModule } from './categories/categories.module';
+import { BooksModule } from './books/books.module';
+import { CollectionsModule } from './collections/collections.module';
+import { ReviewsModule } from './reviews/reviews.module';
+import { SearchModule } from './search/search.module';
+import { HealthModule } from './health/health.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -56,10 +64,43 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
     PrometheusModule.register({
       path: '/metrics',
     }),
-    LoggerModule.forRoot(),
+    LoggerModule.forRoot({
+      pinoHttp: {
+        level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+        transport: {
+          target:
+            process.env.NODE_ENV === 'production' ? 'pino/file' : 'pino-pretty',
+          options:
+            process.env.NODE_ENV !== 'production'
+              ? { destination: 1 }
+              : { singleLine: true },
+        },
+        serializers: {
+          req(req) {
+            return {
+              method: req.method,
+              url: req.url,
+              params: req.params,
+              query: req.query,
+              ...(process.env.NODE_ENV !== 'production' && {
+                body: req.body,
+              }),
+            };
+          },
+        },
+      },
+    }),
     UsersModule,
     MailModule,
     AuthModule,
+    AuthorsModule,
+    CategoriesModule,
+    BooksModule,
+    CollectionsModule,
+    ReviewsModule,
+    SearchModule,
+    HealthModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService, TokenService],

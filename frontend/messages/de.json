@@ -1,0 +1,31 @@
+{
+  "home": {
+    "title": "Entdecke deine nächsten Bücher",
+    "search_placeholder": "Bücher suchen...",
+    "popular_books": "Beliebte Bücher",
+    "categories": "Kategorien"
+  },
+  "book": {
+    "synopsis": "Zusammenfassung",
+    "pages": "Seiten",
+    "author": "Autor",
+    "publisher": "Verlag",
+    "isbn": "ISBN",
+    "published_date": "Veröffentlichungsdatum",
+    "add_to_collection": "Zur Sammlung hinzufügen",
+    "reviews": "Bewertungen",
+    "write_review": "Bewertung schreiben",
+    "no_reviews": "Noch keine Bewertungen"
+  },
+  "nav": {
+    "login": "Anmelden",
+    "register": "Registrieren",
+    "my_collections": "Meine Sammlungen",
+    "logout": "Abmelden"
+  },
+  "auth": {
+    "email": "E-Mail",
+    "password": "Passwort",
+    "forgot_password": "Passwort vergessen"
+  }
+}

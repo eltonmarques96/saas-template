@@ -1,0 +1,31 @@
+{
+  "home": {
+    "title": "Descubra seus próximos livros",
+    "search_placeholder": "Pesquisar livros...",
+    "popular_books": "Livros Populares",
+    "categories": "Categorias"
+  },
+  "book": {
+    "synopsis": "Sinopse",
+    "pages": "Páginas",
+    "author": "Autor",
+    "publisher": "Editora",
+    "isbn": "ISBN",
+    "published_date": "Data de Publicação",
+    "add_to_collection": "Adicionar à Coleção",
+    "reviews": "Avaliações",
+    "write_review": "Escrever Avaliação",
+    "no_reviews": "Nenhuma avaliação ainda"
+  },
+  "nav": {
+    "login": "Entrar",
+    "register": "Cadastrar",
+    "my_collections": "Minhas Coleções",
+    "logout": "Sair"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Senha",
+    "forgot_password": "Esqueci a senha"
+  }
+}

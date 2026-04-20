@@ -1,31 +1,34 @@
 import styled from "styled-components/native";
+import { colors } from "./theme";
 
 export const Container = styled.View`
   flex: 1;
   justify-content: center;
   padding: 20px;
+  background-color: ${colors.cream};
 `;
 
 export const PageTitle = styled.Text`
-  font-size: 24px;
+  font-size: 28px;
   font-weight: bold;
-  color: #ffe;
+  color: ${colors.espresso};
   text-align: center;
   margin-top: 20px;
   margin-bottom: 20px;
-  text-transform: uppercase !important;
+  text-transform: uppercase;
 `;
 
 export const FormField = styled.TextInput.attrs({
-  placeholderTextColor: "#ddd",
+  placeholderTextColor: colors.muted,
 })`
   height: 50px;
-  color: #ccc;
-  border-color: #ccc;
+  color: ${colors.ink};
+  border-color: ${colors.walnut};
   border-width: 1px;
   border-radius: 8px;
   padding: 10px 15px;
   margin-bottom: 15px;
+  background-color: ${colors.parchment};
 `;
 
 export const SubButtonsContainer = styled.View`
@@ -33,14 +36,15 @@ export const SubButtonsContainer = styled.View`
   flex-direction: row;
   margin: 20px 0px;
 `;
+
 export const LinksButtons = styled.Text`
-  color: #ddd;
+  color: ${colors.mahogany};
   font-size: 15px;
-  text-decoration: underline !important;
+  text-decoration-line: underline;
 `;
 
 export const Subtitle = styled.Text`
-  color: #666;
+  color: ${colors.muted};
   font-size: 16px;
   text-align: center;
   margin-bottom: 20px;

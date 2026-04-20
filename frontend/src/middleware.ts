@@ -6,13 +6,26 @@ const publicRoutes = [
 	{ path: "/verify", whenAuthenticated: "next" },
 	{ path: "/reset-password", whenAuthenticated: "next" },
 	{ path: "/forgot-password", whenAuthenticated: "next" },
+	{ path: "/", whenAuthenticated: "next" },
 ];
+
+// Public content pages that don't require auth
+const PUBLIC_CONTENT_PREFIXES = ["/books", "/authors", "/categories"];
 
 const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/login";
 
 export function middleware(request: NextRequest) {
 	const path = request.nextUrl.pathname;
 	const cleanPath = path.split("?")[0].trim();
+
+	// Allow public content pages without auth
+	const isPublicContent = PUBLIC_CONTENT_PREFIXES.some((prefix) =>
+		cleanPath.startsWith(prefix)
+	);
+	if (isPublicContent) {
+		return NextResponse.next();
+	}
+
 	const publicRoute = publicRoutes.find((route) => {
 		return route.path.trim() === cleanPath;
 	});
